@@ -1,28 +1,28 @@
 {
   "files": {
-    "main.css": "alberoneramos.github.io/rich-text-editor/static/css/main.f6da6609.chunk.css",
-    "main.js": "alberoneramos.github.io/rich-text-editor/static/js/main.11a95c20.chunk.js",
-    "main.js.map": "alberoneramos.github.io/rich-text-editor/static/js/main.11a95c20.chunk.js.map",
-    "runtime-main.js": "alberoneramos.github.io/rich-text-editor/static/js/runtime-main.74cdfc72.js",
-    "runtime-main.js.map": "alberoneramos.github.io/rich-text-editor/static/js/runtime-main.74cdfc72.js.map",
-    "static/js/2.cb2a88f2.chunk.js": "alberoneramos.github.io/rich-text-editor/static/js/2.cb2a88f2.chunk.js",
-    "static/js/2.cb2a88f2.chunk.js.map": "alberoneramos.github.io/rich-text-editor/static/js/2.cb2a88f2.chunk.js.map",
-    "index.html": "alberoneramos.github.io/rich-text-editor/index.html",
-    "precache-manifest.66362e4ecb7ab22ec517150595853d1c.js": "alberoneramos.github.io/rich-text-editor/precache-manifest.66362e4ecb7ab22ec517150595853d1c.js",
-    "service-worker.js": "alberoneramos.github.io/rich-text-editor/service-worker.js",
-    "static/css/main.f6da6609.chunk.css.map": "alberoneramos.github.io/rich-text-editor/static/css/main.f6da6609.chunk.css.map",
-    "static/media/bold.svg": "alberoneramos.github.io/rich-text-editor/static/media/bold.52d38f02.svg",
-    "static/media/code.svg": "alberoneramos.github.io/rich-text-editor/static/media/code.d7ef8adb.svg",
-    "static/media/image.svg": "alberoneramos.github.io/rich-text-editor/static/media/image.117a6d3e.svg",
-    "static/media/italic.svg": "alberoneramos.github.io/rich-text-editor/static/media/italic.c46b9c4a.svg",
-    "static/media/list.svg": "alberoneramos.github.io/rich-text-editor/static/media/list.7da6f7a2.svg",
-    "static/media/type.svg": "alberoneramos.github.io/rich-text-editor/static/media/type.3950b751.svg",
-    "static/media/underline.svg": "alberoneramos.github.io/rich-text-editor/static/media/underline.3a8023ce.svg"
+    "main.css": "/rich-text-editor/static/css/main.f6da6609.chunk.css",
+    "main.js": "/rich-text-editor/static/js/main.5b917997.chunk.js",
+    "main.js.map": "/rich-text-editor/static/js/main.5b917997.chunk.js.map",
+    "runtime-main.js": "/rich-text-editor/static/js/runtime-main.087117ff.js",
+    "runtime-main.js.map": "/rich-text-editor/static/js/runtime-main.087117ff.js.map",
+    "static/js/2.c04123e1.chunk.js": "/rich-text-editor/static/js/2.c04123e1.chunk.js",
+    "static/js/2.c04123e1.chunk.js.map": "/rich-text-editor/static/js/2.c04123e1.chunk.js.map",
+    "index.html": "/rich-text-editor/index.html",
+    "precache-manifest.e4fe879e42c71c2ca219387be9c66569.js": "/rich-text-editor/precache-manifest.e4fe879e42c71c2ca219387be9c66569.js",
+    "service-worker.js": "/rich-text-editor/service-worker.js",
+    "static/css/main.f6da6609.chunk.css.map": "/rich-text-editor/static/css/main.f6da6609.chunk.css.map",
+    "static/media/bold.svg": "/rich-text-editor/static/media/bold.52d38f02.svg",
+    "static/media/code.svg": "/rich-text-editor/static/media/code.d7ef8adb.svg",
+    "static/media/image.svg": "/rich-text-editor/static/media/image.117a6d3e.svg",
+    "static/media/italic.svg": "/rich-text-editor/static/media/italic.c46b9c4a.svg",
+    "static/media/list.svg": "/rich-text-editor/static/media/list.7da6f7a2.svg",
+    "static/media/type.svg": "/rich-text-editor/static/media/type.3950b751.svg",
+    "static/media/underline.svg": "/rich-text-editor/static/media/underline.3a8023ce.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.74cdfc72.js",
-    "static/js/2.cb2a88f2.chunk.js",
+    "static/js/runtime-main.087117ff.js",
+    "static/js/2.c04123e1.chunk.js",
     "static/css/main.f6da6609.chunk.css",
-    "static/js/main.11a95c20.chunk.js"
+    "static/js/main.5b917997.chunk.js"
   ]
 }
