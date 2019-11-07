@@ -1,0 +1,1 @@
+import SoftBreak from 'slate';

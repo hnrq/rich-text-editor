@@ -1,0 +1,27 @@
+.toolbar {
+  display: flex;
+  border-bottom: solid 1.7px rgba(199, 198, 255, 0.15);
+  padding: 10px 0;
+  margin: 0 0 10px 0;
+  & button {
+    min-width: 32px;
+    transition: 0.1s ease-in;
+    &.active {
+      background-color: #333;
+      color: white;
+    }
+  }
+  .image-upload {
+    position: relative;
+    & .url-input-container {
+      display: flex;
+      flex-flow: row;
+      position: absolute;
+      left: 50%;
+      margin-left: -120px;
+      bottom: 28px;
+      background: #333;
+      padding: 8px;
+    }
+  }
+}
