@@ -4,8 +4,7 @@ export const schema = {
       {
         match: [
           { type: 'paragraph' }, 
-          { type: 'image' }, 
-          { type: 'link' },
+          { type: 'image' },
           { type: 'heading' },
           { type: 'quote' },
           { type: 'list' },
@@ -23,6 +22,7 @@ export const schema = {
         },
       ],
     },
+    image: { isVoid: true },
     link: {
       nodes: [{ match: { object: "text" } }],
     },
@@ -43,7 +43,6 @@ export const schema = {
         },
       ],
     },
-    image: { isVoid: true },
     horizontal_rule: { isVoid: true },
   }
 };

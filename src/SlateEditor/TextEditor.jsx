@@ -10,7 +10,7 @@ import {
   TitleIcon
 } from 'icons';
 import { commands } from './commands';
-import initialValue from './value.json';
+import initialValue from './value.json.js';
 import { plugins } from './plugins';
 import { renderMark } from './renderMark';
 import Toolbar from './Toolbar';
@@ -96,18 +96,20 @@ const TextEditor = ({ readOnly, classList }: Props) => {
 
   return (
     <div>
-      <Toolbar
-        value={value}
-        handleMarkClick={handleMarkClick}
-        handleBlockClick={handleBlockClick}
-        handleImageSubmit={handleImageSubmit}
-        marks={MARK_TYPES} 
-        blocks={BLOCK_TYPES}
-      />
+      {!readOnly && (
+        <Toolbar
+          value={value}
+          handleMarkClick={handleMarkClick}
+          handleBlockClick={handleBlockClick}
+          handleImageSubmit={handleImageSubmit}
+          marks={MARK_TYPES} 
+          blocks={BLOCK_TYPES}
+        />
+      )}
       <Editor 
         value={value}
-        schema={schema}
         autoFocus
+        readOnly={readOnly}
         commands={commands}
         ref={editorRef}
         queries={queries}

@@ -12,6 +12,9 @@
   }
 
   & .image {
+    & > img {
+      max-width: 100%;
+    }
     position: relative;
     & .image-align {
       position: absolute;

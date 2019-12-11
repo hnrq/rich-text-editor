@@ -3,6 +3,18 @@ import When from 'slate-when';
 import Keymap from "@convertkit/slate-keymap";
 import AutoReplace from 'slate-auto-replace';
 import PasteLinkify from 'slate-paste-linkify';
+import InstantReplace from 'slate-instant-replace';
+import isUrl from "is-url";
+
+const addUrl = (editor, lastWord) => {
+  if (isUrl(lastWord)) {
+    editor.moveFocusBackward(lastWord.length);
+    editor.unwrapInline("link");
+    const href = lastWord.startsWith("http") ? lastWord : `https://${lastWord}`;
+    editor.wrapInline({ type: "link", data: { href } });
+    editor.moveFocusForward(lastWord.length);
+  }
+};
 
 export const plugins = [
   When({
@@ -31,7 +43,17 @@ export const plugins = [
   AutoReplace({
     trigger: 'space',
     before: /^(-)$/,
-    change: change => change.setBlocks('li').wrapBlock('ul'),
+    change: change => change.setBlocks('list_item').wrapBlock('list'),
+  }),
+  AutoReplace({
+    trigger: 'space',
+    before: /^(https)$/,
+    change: change => change.setBlocks('link'),
+  }),
+  AutoReplace({
+    trigger: 'enter',
+    before: /^(-{3})$/,
+    change: change => change.setBlocks({ type: 'hr', isVoid: true }),
   }),
   AutoReplace({
     trigger: 'space',
@@ -41,5 +63,6 @@ export const plugins = [
       const level = hashes.length;
       change.setBlocks({ type: 'heading', data: { level } });
     },
-  })
+  }),
+  InstantReplace(addUrl)
 ];

@@ -4,12 +4,6 @@ import { Image } from './Image';
 export const renderBlock = (props, next) => {
   const { node, attributes, children } = props;
   switch (node.type) {
-    case 'link':
-      return (
-        <a {...attributes} href={node.data.get('url')}>
-          {children}
-        </a>
-      );
     case 'paragraph':
       return <p {...attributes}>{children}</p>;
     case 'heading': {

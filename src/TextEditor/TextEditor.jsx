@@ -9,8 +9,8 @@ import 'draft-js/dist/Draft.css';
 import './TextEditor.scss';
 
 type Props = {
-  classList: string | Array<string>,
-  readOnly: boolean
+  classList?: string | Array<string>,
+  readOnly?: boolean
 }
 
 const styleMap = {

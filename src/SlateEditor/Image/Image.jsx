@@ -14,7 +14,7 @@ const Image = ({ node, editor, readOnly }) => {
         center: align === 'center',
         right: align === 'right'
       })}>
-        <div className="image">
+        <figure className="image">
           <img src={src} alt="inserted" />
           {!readOnly && (
             <select className="image-align" value={align} onChange={handleChange}>
@@ -23,7 +23,7 @@ const Image = ({ node, editor, readOnly }) => {
               <option value="right">Right</option>
             </select>
           )}
-        </div>
+        </figure>
     </div>
   )
 };
