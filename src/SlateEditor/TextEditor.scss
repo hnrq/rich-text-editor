@@ -24,4 +24,8 @@ blockquote {
   & p {
     display: inline;
   }
+
+  & .color-picker {
+    margin-right: 65px;
+  }
 }

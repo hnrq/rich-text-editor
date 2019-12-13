@@ -1,6 +1,8 @@
 import React from "react";
+import { Code } from './Code';
 
-export default function Element({ attributes, children, element }) {
+export default function Element(props) {
+  const { attributes, children, element } = props;
   switch (element.type) {
     case "block-quote":
       return <blockquote {...attributes}>{children}</blockquote>;
@@ -14,6 +16,8 @@ export default function Element({ attributes, children, element }) {
       return <li {...attributes}>{children}</li>;
     case "numbered-list":
       return <ol {...attributes}>{children}</ol>;
+    case "code-block":
+      return <Code {...props} />;
     default:
       return <p {...attributes}>{children}</p>;
   }

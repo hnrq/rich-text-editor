@@ -1,8 +1,12 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { 
+  useState, 
+  useMemo, 
+  useCallback
+} from "react";
 import { createEditor } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
-import { withRichText, HOTKEYS } from "utils/slateUtils";
-import isHotkey from "is-hotkey";
+import { withRichText } from "utils/slateUtils";
+import { withHistory } from "slate-history";
 import "./TextEditor.scss";
 import {
   AiOutlineOrderedList,
@@ -13,8 +17,9 @@ import {
 } from "react-icons/ai";
 import { MdCode } from "react-icons/md";
 import { FaHeading } from "react-icons/fa";
+import handleKeyDown from './handleKeyDown';
 import Toolbar from "./Toolbar";
-import FormatButton from "./FormatButton";
+import { BlockButton, MarkButton } from "./Button";
 import { Element } from "./Element";
 import { Leaf } from "./Leaf";
 
@@ -26,70 +31,58 @@ type Props = {
 };
 
 const Editor = ({ readOnly, classList }: Props) => {
-  const editor = useMemo(() => withRichText(withReact(createEditor())), []);
-  const renderElement = useCallback(props => <Element {...props} />, []);
-  const renderLeaf = useCallback(props => <Leaf {...props} />, []);
-
+  const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), []);
+  const renderElement = useCallback((props) => <Element {...props} />, []);
+  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const [editorValue, setEditorValue] = useState([
     {
       type: "paragraph",
       children: [{ text: "" }]
     }
   ]);
-  const [editorSelection, setEditorSelection] = useState(null);
 
   return (
     <Slate
       editor={editor}
       value={editorValue}
-      selection={editorSelection}
-      onChange={(value, selection) => {
-        setEditorValue(value);
-        setEditorSelection(selection);
-      }}
+      onChange={(value) => setEditorValue(value)}
     >
       <Toolbar>
-        <FormatButton format="bold">
+        <MarkButton format="bold">
           <AiOutlineBold />
-        </FormatButton>
-        <FormatButton format="italic">
+        </MarkButton>
+        <MarkButton format="italic">
           <AiOutlineItalic />
-        </FormatButton>
-        <FormatButton format="underlined">
+        </MarkButton>
+        <MarkButton format="underlined">
           <AiOutlineUnderline />
-        </FormatButton>
-        <FormatButton format="code">
+        </MarkButton>
+        <MarkButton format="code">
           <MdCode />
-        </FormatButton>
-        <FormatButton format="heading-one">
+        </MarkButton>
+        <BlockButton format="heading-one">
           <FaHeading />
-        </FormatButton>
-        <FormatButton format="heading-two">
+        </BlockButton>
+        <BlockButton format="heading-two">
           <FaHeading />²
-        </FormatButton>
-        <FormatButton format="block-quote">"</FormatButton>
-        <FormatButton format="numbered-list">
+        </BlockButton>
+        <BlockButton format="code-block">
+          <MdCode />
+        </BlockButton>
+        <BlockButton format="block-quote">"</BlockButton>
+        <BlockButton format="numbered-list">
           <AiOutlineOrderedList />
-        </FormatButton>
-        <FormatButton format="bulleted-list">
+        </BlockButton>
+        <BlockButton format="bulleted-list">
           <AiOutlineUnorderedList />
-        </FormatButton>
+        </BlockButton>
       </Toolbar>
       <Editable
         placeholder="Well, hello there!"
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         autoFocus
-        onKeyDown={event => {
-          if (event.ctrlKey) {
-            Object.entries(HOTKEYS).forEach(([hotkey, format]) => {
-              if (isHotkey(hotkey, event)) {
-                event.preventDefault();
-                editor.exec({ type: "toggle_format", format });
-              }
-            });
-          }
-        }}
+        onKeyDown={(event) => handleKeyDown(event, editor)}
       />
     </Slate>
   );
