@@ -1,0 +1,12 @@
+
+.editor {
+  & blockquote {
+    position: relative;
+    padding-left: 1em;
+    border-left: 0.2em solid lighten(#000, 70%);
+    background: lighten(#000, 99%);
+    font-family: 'Roboto', serif;
+    font-weight: 100;
+  }
+  
+}

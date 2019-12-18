@@ -24,7 +24,7 @@ module.exports = {
     'react/no-multi-comp': 'off',
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-filename-extension': 'off',
-    'react/jsx-indent': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'react/default-props-match-prop-types': 'off',
     'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
     'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies

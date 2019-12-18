@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Editor } from './SlateEditor';
+import { Editor } from './DraftEditor';
 
 const App = () => (
   <div className="App">
