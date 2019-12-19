@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import './StyleButton.scss';
 
 const StyleButton = ({ 
   active, 
@@ -13,7 +14,9 @@ const StyleButton = ({
   };
 
   return (
-    <button className={classNames("btn btn-link style-button", { active })} onClick={toggleActive}>
+    <button 
+    className={classNames("btn btn-link style-button", { 'btn-active': active })} 
+    onMouseDown={toggleActive}>
       {label}
     </button>
   );

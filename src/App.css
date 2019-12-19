@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Overpass&display=swap');
+
 .App {
   color: rgb(17, 17, 17);
   max-width: 740px;
@@ -6,11 +8,13 @@
   padding: 40px;
   margin: 65px auto 45px;
   border-radius: 4.5px;
+  font-size: 18px;
+  font-family: 'Overpass', sans-serif;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(240, 240, 240) !important;
 }
