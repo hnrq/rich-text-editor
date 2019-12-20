@@ -19,6 +19,7 @@
     "immutable": "^4.0.0-rc.12",
     "immutable-js": "^0.3.1-6",
     "is-hotkey": "^0.1.6",
+    "is-url": "^1.2.4",
     "node-sass": "^4.13.0",
     "prism-react-renderer": "^1.0.2",
     "prismjs": "^1.17.1",
@@ -27,9 +28,9 @@
     "react-dom": "^16.12.0",
     "react-icons": "^3.8.0",
     "react-scripts": "3.3.0",
-    "slate": "^0.54.3",
-    "slate-history": "^0.54.3",
-    "slate-react": "^0.54.3"
+    "slate": "^0.57.1",
+    "slate-history": "^0.57.1",
+    "slate-react": "^0.57.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,7 +59,7 @@
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "7.17.0",
     "eslint-plugin-react-hooks": "^2.3.0",
     "flow-bin": "0.114.0",

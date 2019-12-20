@@ -1,4 +1,5 @@
 import { Editor } from "slate";
+import isUrl from 'is-url';
 
 export const TEXT_FORMATS = ["bold", "italic", "underlined", "code"];
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -19,8 +20,7 @@ export const HOTKEYS = {
 
 export const isBlockActive = (editor, format) => {
   const [match] = Editor.nodes(editor, {
-    match: { type: format },
-    mode: 'all',
+    match: (node) => node.type === format,
   });
 
   return !!match;
@@ -32,7 +32,12 @@ export const isMarkActive = (editor, format) => {
 };
 
 export const withRichText = (editor) => {
-  const { exec } = editor;
+  const { exec, insertText } = editor;
+
+  editor.insertText = (text) => {
+    if (isUrl(text)) return console.log('Link!');
+    return insertText(text);
+  };
 
   editor.exec = (command) => {
     if (command.type === 'format_block') {

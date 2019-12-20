@@ -92,36 +92,42 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       className={classNames("editor", classList)} 
       onClick={() => editorRef.current.focus()}
       role="textbox"
-      onKeyDown={() => editorRef.current.focus()}
+      onKeyDown={() => {}}
     >
-      <Toolbar>
-        <BlockStyleControls 
-          editorState={editorState}
-          onToggle={toggleBlockType}
-        />
-      </Toolbar>
+      { !readOnly && (
+        <Toolbar>
+          <BlockStyleControls 
+            editorState={editorState}
+            onToggle={toggleBlockType}
+          />
+        </Toolbar>
+      )}
       <Editor 
         editorState={editorState}
         plugins={[...plugins, inlineToolbarPlugin, linkPlugin]}
         ref={editorRef}
+        readOnly={readOnly}
         onChange={setEditorState} 
         keyBindingFn={keyBinding}
         blockStyleFn={getBlockStyle}
         handleKeyCommand={handleKeyCommand}
       />
-      <InlineToolbar>
-        {
-          (externalProps) => (
-            <div className="inline-toolbar">
-              <InlineStyleControls 
-                editorState={editorState}
-                onToggle={toggleInlineStyle}
-                {...externalProps}
-              />
-            </div>
-          )
-        }
-      </InlineToolbar>
+      {!readOnly && (
+        <InlineToolbar>
+          {
+            (externalProps) => (
+              <div className="inline-toolbar">
+                <InlineStyleControls 
+                  editorState={editorState}
+                  onToggle={toggleInlineStyle}
+                  {...externalProps}
+                />
+                <LinkButton {...externalProps} />
+              </div>
+            )
+          }
+        </InlineToolbar>
+      )}
     </div>
   );
 };

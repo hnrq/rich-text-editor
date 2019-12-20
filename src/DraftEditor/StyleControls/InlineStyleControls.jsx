@@ -30,7 +30,7 @@ const INLINE_STYLES = [
 const InlineStyleControls = ({ editorState, onToggle, classList }: Props) => {
   const currentStyle = editorState.getCurrentInlineStyle();
   return (
-    <div className={classNames(classList)}>
+    <div className={classNames(classList, "d-flex flex-nowrap")}>
       {INLINE_STYLES.map((type, index) => (
         <StyleButton
           active={currentStyle.has(type.style)}
