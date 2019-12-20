@@ -7,6 +7,7 @@ import {
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import classNames from 'classnames';
+import createLinkPlugin from 'draft-js-anchor-plugin';
 import plugins from './plugins';
 import Toolbar from './Toolbar';
 import BlockStyleControls from './StyleControls/BlockStyleControls';
@@ -18,6 +19,11 @@ type Props = {
   classList: Array<string> | string,
   readOnly: Boolean
 }
+
+const linkPlugin = createLinkPlugin({
+  placeholder: 'Enter an URL...',
+});
+const { LinkButton } = linkPlugin;
 
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
@@ -96,7 +102,7 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       </Toolbar>
       <Editor 
         editorState={editorState}
-        plugins={[...plugins, inlineToolbarPlugin]}
+        plugins={[...plugins, inlineToolbarPlugin, linkPlugin]}
         ref={editorRef}
         onChange={setEditorState} 
         keyBindingFn={keyBinding}
@@ -106,11 +112,13 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       <InlineToolbar>
         {
           (externalProps) => (
-            <InlineStyleControls 
-              editorState={editorState}
-              onToggle={toggleInlineStyle}
-              {...externalProps}
-            />
+            <div className="inline-toolbar">
+              <InlineStyleControls 
+                editorState={editorState}
+                onToggle={toggleInlineStyle}
+                {...externalProps}
+              />
+            </div>
           )
         }
       </InlineToolbar>

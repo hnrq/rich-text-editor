@@ -8,7 +8,6 @@ const plugins = [
   createPrismPlugin({
     prism: Prism
   }),
-  createHashtagPlugin(),
   createLinkifyPlugin(),
 ];
 

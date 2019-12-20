@@ -7,6 +7,7 @@
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "draft-js": "^0.11.3",
+    "draft-js-anchor-plugin": "^2.0.3",
     "draft-js-drag-n-drop-plugin": "^2.0.4",
     "draft-js-hashtag-plugin": "^2.0.4",
     "draft-js-image-plugin": "^2.0.7",
