@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "alberoneramos.github.io/rich-text-editor/static/css/main.8b0f70d9.chunk.css",
-    "main.js": "alberoneramos.github.io/rich-text-editor/static/js/main.d9d093f2.chunk.js",
-    "main.js.map": "alberoneramos.github.io/rich-text-editor/static/js/main.d9d093f2.chunk.js.map",
-    "runtime-main.js": "alberoneramos.github.io/rich-text-editor/static/js/runtime-main.fbccd64a.js",
-    "runtime-main.js.map": "alberoneramos.github.io/rich-text-editor/static/js/runtime-main.fbccd64a.js.map",
-    "static/css/2.c4c43fc6.chunk.css": "alberoneramos.github.io/rich-text-editor/static/css/2.c4c43fc6.chunk.css",
-    "static/js/2.efa90233.chunk.js": "alberoneramos.github.io/rich-text-editor/static/js/2.efa90233.chunk.js",
-    "static/js/2.efa90233.chunk.js.map": "alberoneramos.github.io/rich-text-editor/static/js/2.efa90233.chunk.js.map",
-    "index.html": "alberoneramos.github.io/rich-text-editor/index.html",
-    "precache-manifest.d7046f8d87339baad795059e79a9a380.js": "alberoneramos.github.io/rich-text-editor/precache-manifest.d7046f8d87339baad795059e79a9a380.js",
-    "service-worker.js": "alberoneramos.github.io/rich-text-editor/service-worker.js",
-    "static/css/2.c4c43fc6.chunk.css.map": "alberoneramos.github.io/rich-text-editor/static/css/2.c4c43fc6.chunk.css.map",
-    "static/css/main.8b0f70d9.chunk.css.map": "alberoneramos.github.io/rich-text-editor/static/css/main.8b0f70d9.chunk.css.map",
-    "static/js/2.efa90233.chunk.js.LICENSE": "alberoneramos.github.io/rich-text-editor/static/js/2.efa90233.chunk.js.LICENSE"
+    "main.css": "/rich-text-editor/static/css/main.8b0f70d9.chunk.css",
+    "main.js": "/rich-text-editor/static/js/main.17bb98f6.chunk.js",
+    "main.js.map": "/rich-text-editor/static/js/main.17bb98f6.chunk.js.map",
+    "runtime-main.js": "/rich-text-editor/static/js/runtime-main.35bef43d.js",
+    "runtime-main.js.map": "/rich-text-editor/static/js/runtime-main.35bef43d.js.map",
+    "static/css/2.c4c43fc6.chunk.css": "/rich-text-editor/static/css/2.c4c43fc6.chunk.css",
+    "static/js/2.efa90233.chunk.js": "/rich-text-editor/static/js/2.efa90233.chunk.js",
+    "static/js/2.efa90233.chunk.js.map": "/rich-text-editor/static/js/2.efa90233.chunk.js.map",
+    "index.html": "/rich-text-editor/index.html",
+    "precache-manifest.54b7fe7b9a7a0862c705e2190b60f654.js": "/rich-text-editor/precache-manifest.54b7fe7b9a7a0862c705e2190b60f654.js",
+    "service-worker.js": "/rich-text-editor/service-worker.js",
+    "static/css/2.c4c43fc6.chunk.css.map": "/rich-text-editor/static/css/2.c4c43fc6.chunk.css.map",
+    "static/css/main.8b0f70d9.chunk.css.map": "/rich-text-editor/static/css/main.8b0f70d9.chunk.css.map",
+    "static/js/2.efa90233.chunk.js.LICENSE": "/rich-text-editor/static/js/2.efa90233.chunk.js.LICENSE"
   },
   "entrypoints": [
-    "static/js/runtime-main.fbccd64a.js",
+    "static/js/runtime-main.35bef43d.js",
     "static/css/2.c4c43fc6.chunk.css",
     "static/js/2.efa90233.chunk.js",
     "static/css/main.8b0f70d9.chunk.css",
-    "static/js/main.d9d093f2.chunk.js"
+    "static/js/main.17bb98f6.chunk.js"
   ]
 }
