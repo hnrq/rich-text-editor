@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Toolbar = ({ children, classList }: Props) => (
-  <div className={classNames(classList, "toolbar")}>{children}</div>
+  <div className={classNames(classList, "static-toolbar")}>{children}</div>
 );
 
 export default Toolbar;
