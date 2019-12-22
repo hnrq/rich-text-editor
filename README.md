@@ -10,4 +10,5 @@ A live demo is available [here](https://alberoneramos.github.io/rich-text-editor
 Even though there are a lot of React WYSIWYG editors, most of those just didn't fit the requirements. So I decided to create two editors from scratch: **SlateEditor** (using SlateJS) and **TextEditor** (using DraftJS)
 
 ## Status
-For now, I'm focusing on the **SlateEditor**, but why? Well, Slate has a native support for plugins, and it's much more simple to use than DraftJS, in my opinion. For now, I'll continue on its development.
+21/10/2019 - For now, I'm focusing on the **SlateEditor**, but why? Well, Slate has a native support for plugins, and it's much more simple to use than DraftJS, in my opinion. For now, I'll continue on its development.
+21/12/2019 - Since **SlateJS** had some breaking changes on `0.50`, I turned my focus to **Draft.js**, using `draft-js-plugins-editor`.
