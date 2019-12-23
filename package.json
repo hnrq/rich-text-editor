@@ -1,7 +1,7 @@
 {
   "name": "rich-text-editor",
   "version": "0.1.0",
-  "homepage": "http://alberoneramos.github.io/rich-text-editor",
+  "homepage": "https://alberoneramos.github.io/rich-text-editor",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.4.1",
@@ -27,6 +27,7 @@
     "react-color": "^2.17.3",
     "react-dom": "^16.12.0",
     "react-icons": "^3.8.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "slate": "^0.57.1",
     "slate-history": "^0.57.1",

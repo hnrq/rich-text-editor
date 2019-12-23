@@ -1,9 +1,15 @@
 import React from "react";
 import { useSlate } from "slate-react";
 import classNames from "classnames";
-import { isBlockActive } from "utils/slateUtils";
+import './Button.scss';
+import { isBlockActive, toggleBlock } from "utils/slateUtils";
 
-const BlockButton = ({ format, children }) => {
+type Props = {
+  format: 'string',
+  children: React$Element<any>
+};
+
+const BlockButton = ({ format, children }: Props) => {
   const editor = useSlate();
   return (
     <button
@@ -12,7 +18,7 @@ const BlockButton = ({ format, children }) => {
       })}
       onClick={(event) => {
         event.preventDefault();
-        editor.exec({ type: 'format_block', format });
+        toggleBlock(editor, format);
       }}
     >
       {children}

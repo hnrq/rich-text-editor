@@ -1,9 +1,15 @@
 import React from "react";
 import { useSlate } from "slate-react";
 import classNames from "classnames";
-import { isMarkActive } from "utils/slateUtils";
+import './Button.scss';
+import { isMarkActive, toggleMark } from "utils/slateUtils";
 
-const MarkButton = ({ format, children }) => {
+type Props = {
+  format: 'string',
+  children: React$Element<any>
+};
+
+const MarkButton = ({ format, children }: Props) => {
   const editor = useSlate();
   return (
     <button
@@ -12,7 +18,7 @@ const MarkButton = ({ format, children }) => {
       })}
       onClick={(event) => {
         event.preventDefault();
-        editor.exec({ type: 'format_text', properties: { [format]: true } });
+        toggleMark(editor, format);
       }}
     >
       {children}

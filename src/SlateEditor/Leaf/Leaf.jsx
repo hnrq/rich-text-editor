@@ -1,6 +1,13 @@
-import React from "react";
+import React from 'react';
+import type { Leaf as LeafType } from 'slate';
 
-const Leaf = ({ attributes, children, leaf }) => {
+type Props = {
+  attributes: Attributes,
+  children: React$Element<any>,
+  leaf: LeafType
+};
+
+const Leaf = ({ attributes, children, leaf }: Props) => {
   let leafChildren = children;
   if (leaf.bold) {
     leafChildren = <strong>{leafChildren}</strong>;

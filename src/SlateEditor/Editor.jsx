@@ -1,27 +1,26 @@
-import React, { 
-  useState, 
-  useMemo, 
-  useCallback
-} from "react";
-import { createEditor } from "slate";
-import { Slate, Editable, withReact } from "slate-react";
-import { withRichText } from "utils/slateUtils";
-import { withHistory } from "slate-history";
-import "./TextEditor.scss";
+import React, { useState, useMemo, useCallback } from 'react';
+import { createEditor } from 'slate';
+import { Slate, Editable, withReact } from 'slate-react';
+import { toggleFormat, toggleBlock } from 'utils/slateUtils';
+import { withHistory } from 'slate-history';
+import './TextEditor.scss';
 import {
-  AiOutlineOrderedList,
-  AiOutlineUnorderedList,
-  AiOutlineBold,
-  AiOutlineUnderline,
-  AiOutlineItalic
-} from "react-icons/ai";
-import { MdCode } from "react-icons/md";
-import { FaHeading } from "react-icons/fa";
+  FaHeading,
+  FaListOl,
+  FaUnderline,
+  FaBold,
+  FaItalic,
+  FaListUl,
+  FaCode,
+  FaLink,
+  FaQuoteRight
+} from 'react-icons/fa';
 import handleKeyDown from './handleKeyDown';
-import Toolbar from "./Toolbar";
-import { BlockButton, MarkButton } from "./Button";
-import { Element } from "./Element";
-import { Leaf } from "./Leaf";
+import InlineToolbar from './InlineToolbar';
+import Toolbar from './Toolbar';
+import { BlockButton, MarkButton, LinkButton } from './Button';
+import { Element } from './Element';
+import { Leaf } from './Leaf';
 
 type Props = {
   /** If the Editor is readOnly */
@@ -31,13 +30,13 @@ type Props = {
 };
 
 const Editor = ({ readOnly, classList }: Props) => {
-  const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), []);
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const [editorValue, setEditorValue] = useState([
     {
-      type: "paragraph",
-      children: [{ text: "" }]
+      type: 'paragraph',
+      children: [{ text: '' }]
     }
   ]);
 
@@ -47,34 +46,40 @@ const Editor = ({ readOnly, classList }: Props) => {
       value={editorValue}
       onChange={(value) => setEditorValue(value)}
     >
+      <InlineToolbar />
       <Toolbar>
         <MarkButton format="bold">
-          <AiOutlineBold />
+          <FaBold />
         </MarkButton>
         <MarkButton format="italic">
-          <AiOutlineItalic />
+          <FaItalic />
         </MarkButton>
         <MarkButton format="underlined">
-          <AiOutlineUnderline />
+          <FaUnderline />
         </MarkButton>
         <MarkButton format="code">
-          <MdCode />
+          <FaCode />
         </MarkButton>
+        <LinkButton>
+          <FaLink />
+        </LinkButton>
         <BlockButton format="heading-one">
           <FaHeading />
         </BlockButton>
         <BlockButton format="heading-two">
-          <FaHeading />²
+          <FaHeading /><sub>2</sub>
         </BlockButton>
         <BlockButton format="code-block">
-          <MdCode />
+          <FaCode />
         </BlockButton>
-        <BlockButton format="block-quote">"</BlockButton>
+        <BlockButton format="block-quote">
+          <FaQuoteRight />
+        </BlockButton>
         <BlockButton format="numbered-list">
-          <AiOutlineOrderedList />
+          <FaListOl />
         </BlockButton>
         <BlockButton format="bulleted-list">
-          <AiOutlineUnorderedList />
+          <FaListUl />
         </BlockButton>
       </Toolbar>
       <Editable
@@ -82,6 +87,20 @@ const Editor = ({ readOnly, classList }: Props) => {
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         autoFocus
+        onDOMBeforeInput={(event) => {
+          switch (event.inputType) {
+            case 'formatBold':
+              return toggleFormat(editor, 'bold');
+            case 'formatItalic':
+              return toggleFormat(editor, 'italic');
+            case 'formatUnderline':
+              return toggleFormat(editor, 'underline');
+            case 'formatLink':
+              return toggleBlock(editor, 'link');
+            default:
+              return null;
+          }
+        }}
         onKeyDown={(event) => handleKeyDown(event, editor)}
       />
     </Slate>

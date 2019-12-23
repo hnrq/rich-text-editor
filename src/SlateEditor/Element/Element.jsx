@@ -1,23 +1,32 @@
-import React from "react";
-import { Code } from './Code';
+import React, { Attributes } from 'react';
+import type { Element as ElementType } from 'slate';
 
-export default function Element(props) {
-  const { attributes, children, element } = props;
+type Props = {
+  attributes: Attributes,
+  children: React$Element<any>,
+  element: ElementType
+};
+
+export default function Element({ attributes, children, element }: Props) {
   switch (element.type) {
-    case "block-quote":
+    case 'link':
+      return (
+        <a {...attributes} href={element.url}>
+          {children}
+        </a>
+      );
+    case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>;
-    case "bulleted-list":
+    case 'bulleted-list':
       return <ul {...attributes}>{children}</ul>;
-    case "heading-one":
+    case 'heading-one':
       return <h1 {...attributes}>{children}</h1>;
-    case "heading-two":
+    case 'heading-two':
       return <h2 {...attributes}>{children}</h2>;
-    case "list-item":
+    case 'list-item':
       return <li {...attributes}>{children}</li>;
-    case "numbered-list":
+    case 'numbered-list':
       return <ol {...attributes}>{children}</ol>;
-    case "code-block":
-      return <Code {...props} />;
     default:
       return <p {...attributes}>{children}</p>;
   }
