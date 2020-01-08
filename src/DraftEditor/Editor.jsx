@@ -3,7 +3,8 @@ import {
   EditorState,
   RichUtils,
   getDefaultKeyBinding,
-  Modifier
+  Modifier,
+  convertToRaw
 } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
@@ -124,6 +125,14 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
             editorState={editorState}
             onToggle={toggleBlockType}
           />
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              console.log(convertToRaw(editorState.getCurrentContent()));
+            }}
+          >
+            Convert to Raw JS
+          </button>
         </Toolbar>
       )}
       <Editor
