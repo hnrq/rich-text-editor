@@ -1,8 +1,8 @@
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 
-.inline-toolbar {
+.inline-toolbar-slate {
   position: absolute;
   z-index: 1;
   top: -10000px;
@@ -21,7 +21,7 @@
     top: 100%;
     left: 50%;
     border: solid transparent;
-    content: " ";
+    content: ' ';
     height: 0;
     width: 0;
     position: absolute;
@@ -41,9 +41,9 @@
   }
   & button.btn.btn-link {
     background: none;
-    color: lighten(theme-color("dark"), 45%);
+    color: lighten(theme-color('dark'), 45%);
     &.active {
-      color: lighten(theme-color("dark"), 80%);
+      color: lighten(theme-color('dark'), 80%);
     }
   }
 }

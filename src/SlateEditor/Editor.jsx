@@ -67,7 +67,8 @@ const Editor = ({ readOnly, classList }: Props) => {
           <FaHeading />
         </BlockButton>
         <BlockButton format="heading-two">
-          <FaHeading /><sub>2</sub>
+          <FaHeading />
+          <sub>2</sub>
         </BlockButton>
         <BlockButton format="code-block">
           <FaCode />

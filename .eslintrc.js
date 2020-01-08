@@ -21,7 +21,7 @@ module.exports = {
   rules: {
     'import/prefer-default-export': 'off',
     'react/button-has-type': 'off',
-    'react/no-multi-comp': 'off',
+    'react/no-multi-comp': 0,
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-filename-extension': 'off',
     'react/jsx-props-no-spreading': 'off',
@@ -75,9 +75,7 @@ module.exports = {
     'react/no-did-mount-set-state': 1,
     'react/no-did-update-set-state': 1,
     'react/no-direct-mutation-state': 1,
-    'react/no-multi-comp': 1,
     'react/no-set-state': 0,
-
     'react/no-unknown-property': 1,
     'react/prefer-es6-class': 1,
     'react/prop-types': 1,

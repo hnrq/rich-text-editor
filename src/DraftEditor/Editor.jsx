@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  EditorState, 
-  RichUtils, 
-  getDefaultKeyBinding
+import {
+  EditorState,
+  RichUtils,
+  getDefaultKeyBinding,
+  Modifier
 } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
@@ -10,6 +11,7 @@ import classNames from 'classnames';
 import createLinkPlugin from 'draft-js-anchor-plugin';
 import plugins from './plugins';
 import Toolbar from './Toolbar';
+import decorators from './decorator';
 import BlockStyleControls from './StyleControls/BlockStyleControls';
 import InlineStyleControls from './StyleControls/InlineStyleControls';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
@@ -18,10 +20,10 @@ import './Editor.scss';
 type Props = {
   classList: Array<string> | string,
   readOnly: Boolean
-}
+};
 
 const linkPlugin = createLinkPlugin({
-  placeholder: 'Enter an URL...',
+  placeholder: 'Enter an URL...'
 });
 const { LinkButton } = linkPlugin;
 
@@ -34,8 +36,10 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
 
   const getBlockStyle = (block) => {
     switch (block.getType()) {
-      case 'code-block': return 'language-javascript';
-      default: return null;
+      case 'code-block':
+        return 'language-javascript';
+      default:
+        return null;
     }
   };
 
@@ -46,24 +50,31 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   useEffect(() => {
     const selection = editorState.getSelection();
     const block = editorState
-        .getCurrentContent()
-        .getBlockForKey(selection.getStartKey());
-    if (block.getType() === "code-block") {
+      .getCurrentContent()
+      .getBlockForKey(selection.getStartKey());
+    if (block.getType() === 'code-block') {
       const data = block.getData().merge({ language: 'javascript' });
       const newBlock = block.merge({ data });
       const newContentState = editorState.getCurrentContent().merge({
         blockMap: editorState
-                  .getCurrentContent()
-                  .getBlockMap()
-                  .set(selection.getStartKey(), newBlock),
+          .getCurrentContent()
+          .getBlockMap()
+          .set(selection.getStartKey(), newBlock),
         selectionAfter: selection
       });
-      setEditorState(EditorState.push(editorState, newContentState, "change-block-data"));
+      setEditorState(
+        EditorState.push(editorState, newContentState, 'change-block-data')
+      );
     }
   }, [editorState]);
 
   const keyBinding = (e) => {
     if (e.keyCode === 13 && e.shiftKey) return 'soft-break';
+    const selection = editorState.getSelection();
+    const block = editorState
+      .getCurrentContent()
+      .getBlockForKey(selection.getStartKey());
+    if (e.key === 'Tab' && block.getType() === 'code-block') return 'code-tab';
     return getDefaultKeyBinding(e);
   };
 
@@ -77,6 +88,18 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       setEditorState(RichUtils.insertSoftNewline(editorState));
       return 'handled';
     }
+    if (command === 'code-tab') {
+      const currentState = editorState;
+      const newBlockState = Modifier.replaceText(
+        currentState.getCurrentContent(),
+        currentState.getSelection(),
+        '\t'
+      );
+
+      setEditorState(
+        EditorState.push(currentState, newBlockState, 'insert-characters')
+      );
+    }
     if (newState) {
       setEditorState(newState);
       return 'handled';
@@ -84,48 +107,48 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
     return 'not-handled';
   };
 
-  const toggleBlockType = (type) => setEditorState(RichUtils.toggleBlockType(editorState, type));
+  const toggleBlockType = (type) =>
+    setEditorState(RichUtils.toggleBlockType(editorState, type));
 
   return (
-    <div 
-      tabIndex={0} 
-      className={classNames("editor", classList)} 
+    <div
+      tabIndex={0}
+      className={classNames('editor', classList)}
       onClick={() => editorRef.current.focus()}
       role="textbox"
       onKeyDown={() => {}}
     >
-      { !readOnly && (
+      {!readOnly && (
         <Toolbar>
-          <BlockStyleControls 
+          <BlockStyleControls
             editorState={editorState}
             onToggle={toggleBlockType}
           />
         </Toolbar>
       )}
-      <Editor 
+      <Editor
         editorState={editorState}
         plugins={[...plugins, inlineToolbarPlugin, linkPlugin]}
         ref={editorRef}
         readOnly={readOnly}
-        onChange={setEditorState} 
+        decorators={decorators}
+        onChange={setEditorState}
         keyBindingFn={keyBinding}
         blockStyleFn={getBlockStyle}
         handleKeyCommand={handleKeyCommand}
       />
       {!readOnly && (
         <InlineToolbar>
-          {
-            (externalProps) => (
-              <div className="inline-toolbar">
-                <InlineStyleControls 
-                  editorState={editorState}
-                  onToggle={toggleInlineStyle}
-                  {...externalProps}
-                />
-                <LinkButton {...externalProps} />
-              </div>
-            )
-          }
+          {(externalProps) => (
+            <div className="inline-toolbar-draft">
+              <InlineStyleControls
+                editorState={editorState}
+                onToggle={toggleInlineStyle}
+                {...externalProps}
+              />
+              <LinkButton {...externalProps} />
+            </div>
+          )}
         </InlineToolbar>
       )}
     </div>

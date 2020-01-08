@@ -6,7 +6,7 @@
   "dependencies": {
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
-    "draft-js": "^0.11.3",
+    "draft-js": "^0.11.4",
     "draft-js-anchor-plugin": "^2.0.3",
     "draft-js-drag-n-drop-plugin": "^2.0.4",
     "draft-js-hashtag-plugin": "^2.0.4",
@@ -20,11 +20,12 @@
     "immutable-js": "^0.3.1-6",
     "is-hotkey": "^0.1.6",
     "is-url": "^1.2.4",
+    "linkify-it": "^2.2.0",
     "node-sass": "^4.13.0",
     "prism-react-renderer": "^1.0.2",
-    "prismjs": "^1.17.1",
+    "prismjs": "^1.18.0",
     "react": "^16.12.0",
-    "react-color": "^2.17.3",
+    "react-color": "^2.18.0",
     "react-dom": "^16.12.0",
     "react-icons": "^3.8.0",
     "react-router-dom": "^5.1.2",
@@ -57,14 +58,14 @@
   "devDependencies": {
     "@types/react-dom": "16.9.4",
     "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "7.17.0",
     "eslint-plugin-react-hooks": "^2.3.0",
-    "flow-bin": "0.114.0",
-    "gh-pages": "^2.1.1",
+    "flow-bin": "0.115.0",
+    "gh-pages": "^2.2.0",
     "prettier": "^1.19.1"
   }
 }

@@ -38,7 +38,7 @@ const InlineToolbar = () => {
   }, [selection, editor]);
 
   return createPortal(
-    <div ref={ref} className="inline-toolbar">
+    <div ref={ref} className="inline-toolbar-slate">
       <MarkButton format="bold">
         <FaBold />
       </MarkButton>
