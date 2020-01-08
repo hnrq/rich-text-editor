@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/rich-text-editor/static/css/main.7b9a166c.chunk.css",
-    "main.js": "/rich-text-editor/static/js/main.956c26cb.chunk.js",
-    "main.js.map": "/rich-text-editor/static/js/main.956c26cb.chunk.js.map",
+    "main.js": "/rich-text-editor/static/js/main.6bef3ef2.chunk.js",
+    "main.js.map": "/rich-text-editor/static/js/main.6bef3ef2.chunk.js.map",
     "runtime-main.js": "/rich-text-editor/static/js/runtime-main.35bef43d.js",
     "runtime-main.js.map": "/rich-text-editor/static/js/runtime-main.35bef43d.js.map",
     "static/css/2.717ed80a.chunk.css": "/rich-text-editor/static/css/2.717ed80a.chunk.css",
     "static/js/2.91d4356e.chunk.js": "/rich-text-editor/static/js/2.91d4356e.chunk.js",
     "static/js/2.91d4356e.chunk.js.map": "/rich-text-editor/static/js/2.91d4356e.chunk.js.map",
     "index.html": "/rich-text-editor/index.html",
-    "precache-manifest.879ee2c6ffa93a8123999191914fece3.js": "/rich-text-editor/precache-manifest.879ee2c6ffa93a8123999191914fece3.js",
+    "precache-manifest.7a85186d5ee5157e2d48685dad7e9ecf.js": "/rich-text-editor/precache-manifest.7a85186d5ee5157e2d48685dad7e9ecf.js",
     "service-worker.js": "/rich-text-editor/service-worker.js",
     "static/css/2.717ed80a.chunk.css.map": "/rich-text-editor/static/css/2.717ed80a.chunk.css.map",
     "static/css/main.7b9a166c.chunk.css.map": "/rich-text-editor/static/css/main.7b9a166c.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.717ed80a.chunk.css",
     "static/js/2.91d4356e.chunk.js",
     "static/css/main.7b9a166c.chunk.css",
-    "static/js/main.956c26cb.chunk.js"
+    "static/js/main.6bef3ef2.chunk.js"
   ]
 }
