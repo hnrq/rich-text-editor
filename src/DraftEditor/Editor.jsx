@@ -4,8 +4,11 @@ import {
   RichUtils,
   getDefaultKeyBinding,
   Modifier,
-  convertToRaw
+  convertToRaw,
+  convertFromRaw
 } from 'draft-js';
+import { useDispatch, useSelector } from 'react-redux';
+import { wsConnect, wsDisconnect, setEditorState } from 'actions';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import classNames from 'classnames';
@@ -32,7 +35,8 @@ const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
 const DraftEditor = ({ readOnly, classList }: Props) => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const editorState = useSelector((state) => state.editorReducer);
+  const dispatch = useDispatch();
   const editorRef = useRef();
 
   const getBlockStyle = (block) => {
@@ -45,8 +49,12 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   };
 
   const toggleInlineStyle = (style) => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+    dispatch(setEditorState(RichUtils.toggleInlineStyle(editorState, style)));
   };
+
+  useEffect(() => {
+    dispatch(wsConnect('http://localhost:4001'));
+  }, [dispatch]);
 
   useEffect(() => {
     const selection = editorState.getSelection();
@@ -63,8 +71,10 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
           .set(selection.getStartKey(), newBlock),
         selectionAfter: selection
       });
-      setEditorState(
-        EditorState.push(editorState, newContentState, 'change-block-data')
+      dispatch(
+        setEditorState(
+          EditorState.push(editorState, newContentState, 'change-block-data')
+        )
       );
     }
   }, [editorState]);
@@ -82,11 +92,11 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   const handleKeyCommand = (command, state) => {
     const newState = RichUtils.handleKeyCommand(state, command);
     if (command === 'code-block') {
-      RichUtils.setEditorState(RichUtils.toggleBlockType(state, 'code-block'));
+      dispatch(setEditorState(RichUtils.toggleBlockType(state, 'code-block')));
       return 'handled';
     }
     if (command === 'soft-break') {
-      setEditorState(RichUtils.insertSoftNewline(editorState));
+      dispatch(setEditorState(RichUtils.insertSoftNewline(editorState)));
       return 'handled';
     }
     if (command === 'code-tab') {
@@ -97,19 +107,26 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
         '\t'
       );
 
-      setEditorState(
-        EditorState.push(currentState, newBlockState, 'insert-characters')
+      dispatch(
+        setEditorState(
+          EditorState.push(currentState, newBlockState, 'insert-characters')
+        )
       );
     }
     if (newState) {
-      setEditorState(newState);
+      dispatch(setEditorState(newState));
       return 'handled';
     }
     return 'not-handled';
   };
 
-  const toggleBlockType = (type) =>
-    setEditorState(RichUtils.toggleBlockType(editorState, type));
+  const toggleBlockType = (type) => {
+    dispatch(setEditorState(RichUtils.toggleBlockType(editorState, type)));
+  };
+
+  const handleChange = (newEditorState) => {
+    dispatch(setEditorState(newEditorState));
+  };
 
   return (
     <div
@@ -141,7 +158,7 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
         ref={editorRef}
         readOnly={readOnly}
         decorators={decorators}
-        onChange={setEditorState}
+        onChange={handleChange}
         keyBindingFn={keyBinding}
         blockStyleFn={getBlockStyle}
         handleKeyCommand={handleKeyCommand}
