@@ -55,29 +55,6 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
     dispatch(wsConnect('/'));
   }, [dispatch]);
 
-  useEffect(() => {
-    const selection = editorState.getSelection();
-    const block = editorState
-      .getCurrentContent()
-      .getBlockForKey(selection.getStartKey());
-    if (block.getType() === 'code-block') {
-      const data = block.getData().merge({ language: 'javascript' });
-      const newBlock = block.merge({ data });
-      const newContentState = editorState.getCurrentContent().merge({
-        blockMap: editorState
-          .getCurrentContent()
-          .getBlockMap()
-          .set(selection.getStartKey(), newBlock),
-        selectionAfter: selection
-      });
-      dispatch(
-        setEditorState(
-          EditorState.push(editorState, newContentState, 'change-block-data')
-        )
-      );
-    }
-  }, [editorState, dispatch]);
-
   const keyBinding = (e) => {
     if (e.keyCode === 13 && e.shiftKey) return 'soft-break';
     const selection = editorState.getSelection();
@@ -124,7 +101,26 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   };
 
   const handleChange = (newEditorState) => {
-    dispatch(setEditorState(newEditorState));
+    const selection = newEditorState.getSelection();
+    const block = newEditorState
+      .getCurrentContent()
+      .getBlockForKey(selection.getStartKey());
+    if (block.getType() === 'code-block') {
+      const data = block.getData().merge({ language: 'javascript' });
+      const newBlock = block.merge({ data });
+      const newContentState = newEditorState.getCurrentContent().merge({
+        blockMap: newEditorState
+          .getCurrentContent()
+          .getBlockMap()
+          .set(selection.getStartKey(), newBlock),
+        selectionAfter: selection
+      });
+      dispatch(
+        setEditorState(
+          EditorState.push(newEditorState, newContentState, 'change-block-data')
+        )
+      );
+    } else dispatch(setEditorState(newEditorState));
   };
 
   return (
