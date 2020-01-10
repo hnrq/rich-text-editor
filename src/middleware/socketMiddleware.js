@@ -4,7 +4,6 @@ import socketIOClient from 'socket.io-client';
 
 const socketMiddleware = () => {
   let socket = null;
-  let debounceMessage = null;
   return (store) => (next) => (action) => {
     switch (action.type) {
       case 'WS_CONNECT':
@@ -25,18 +24,12 @@ const socketMiddleware = () => {
         console.log('WebSocket closed');
         break;
       case 'NEW_MESSAGE':
-        if (debounceMessage) return next(action);
         if (socket) {
-          debounceMessage = setTimeout(() => {
-            debounceMessage = null;
-            socket.send(
-              JSON.stringify({
-                command: 'NEW_MESSAGE',
-                message: action.payload
-              })
-            );
-          }, 1000);
+          socket.send(
+            JSON.stringify({ command: 'NEW_MESSAGE', message: action.payload })
+          );
         }
+
         break;
       default:
         return next(action);
