@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   EditorState,
   RichUtils,
   getDefaultKeyBinding,
   Modifier,
-  convertToRaw,
-  convertFromRaw
+  convertToRaw
 } from 'draft-js';
 import { useDispatch, useSelector } from 'react-redux';
-import { wsConnect, wsDisconnect, setEditorState } from 'actions';
+import { wsConnect, setEditorState } from 'actions';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import classNames from 'classnames';
@@ -77,7 +76,7 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
         )
       );
     }
-  }, [editorState]);
+  }, [editorState, dispatch]);
 
   const keyBinding = (e) => {
     if (e.keyCode === 13 && e.shiftKey) return 'soft-break';

@@ -1,7 +1,7 @@
 {
   "name": "rich-text-editor",
   "version": "0.1.0",
-  "homepage": "https://alberoneramos.github.io/rich-text-editor",
+  "homepage": "https://ancient-brushlands-39500.herokuapp.com/",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.4.1",

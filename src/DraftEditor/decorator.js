@@ -1,6 +1,5 @@
 import React from 'react';
-import { CompositeDecorator } from 'draft-js';
-import { HASHTAG_REGEX, LINK_REGEX } from 'utils/regex';
+import { HASHTAG_REGEX } from 'utils/regex';
 import linkifyIt from 'linkify-it';
 
 const linkify = linkifyIt();
