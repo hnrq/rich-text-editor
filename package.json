@@ -2,6 +2,7 @@
   "name": "rich-text-editor",
   "version": "0.1.0",
   "homepage": "https://murmuring-everglades-31838.herokuapp.com/",
+  "proxy": "http://localhost:4001/",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.4.1",

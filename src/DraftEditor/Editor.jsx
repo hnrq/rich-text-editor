@@ -52,7 +52,7 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   };
 
   useEffect(() => {
-    dispatch(wsConnect('http://localhost:4001'));
+    dispatch(wsConnect('/'));
   }, [dispatch]);
 
   useEffect(() => {
