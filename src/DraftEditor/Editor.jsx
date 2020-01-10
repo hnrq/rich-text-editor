@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
   EditorState,
   RichUtils,
@@ -7,7 +7,7 @@ import {
   convertToRaw
 } from 'draft-js';
 import { useDispatch, useSelector } from 'react-redux';
-import { wsConnect, setEditorState } from 'actions';
+import { setEditorStateSuccess } from 'actions';
 import Editor from 'draft-js-plugins-editor';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import classNames from 'classnames';
@@ -48,12 +48,10 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   };
 
   const toggleInlineStyle = (style) => {
-    dispatch(setEditorState(RichUtils.toggleInlineStyle(editorState, style)));
+    dispatch(
+      setEditorStateSuccess(RichUtils.toggleInlineStyle(editorState, style))
+    );
   };
-
-  useEffect(() => {
-    dispatch(wsConnect('/'));
-  }, [dispatch]);
 
   const keyBinding = (e) => {
     if (e.keyCode === 13 && e.shiftKey) return 'soft-break';
@@ -68,11 +66,13 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
   const handleKeyCommand = (command, state) => {
     const newState = RichUtils.handleKeyCommand(state, command);
     if (command === 'code-block') {
-      dispatch(setEditorState(RichUtils.toggleBlockType(state, 'code-block')));
+      dispatch(
+        setEditorStateSuccess(RichUtils.toggleBlockType(state, 'code-block'))
+      );
       return 'handled';
     }
     if (command === 'soft-break') {
-      dispatch(setEditorState(RichUtils.insertSoftNewline(editorState)));
+      dispatch(setEditorStateSuccess(RichUtils.insertSoftNewline(editorState)));
       return 'handled';
     }
     if (command === 'code-tab') {
@@ -84,20 +84,22 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       );
 
       dispatch(
-        setEditorState(
+        setEditorStateSuccess(
           EditorState.push(currentState, newBlockState, 'insert-characters')
         )
       );
     }
     if (newState) {
-      dispatch(setEditorState(newState));
+      dispatch(setEditorStateSuccess(newState));
       return 'handled';
     }
     return 'not-handled';
   };
 
   const toggleBlockType = (type) => {
-    dispatch(setEditorState(RichUtils.toggleBlockType(editorState, type)));
+    dispatch(
+      setEditorStateSuccess(RichUtils.toggleBlockType(editorState, type))
+    );
   };
 
   const handleChange = (newEditorState) => {
@@ -116,11 +118,11 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
         selectionAfter: selection
       });
       dispatch(
-        setEditorState(
+        setEditorStateSuccess(
           EditorState.push(newEditorState, newContentState, 'change-block-data')
         )
       );
-    } else dispatch(setEditorState(newEditorState));
+    } else dispatch(setEditorStateSuccess(newEditorState));
   };
 
   return (
