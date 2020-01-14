@@ -19,7 +19,7 @@ export const setEditorState = (editorState) => (dispatch, getState) => {
   const currentContent = getState().editorReducer.getCurrentContent();
   const newContent = editorState.getCurrentContent();
 
-  if (currentContent !== newContent) {
+  if (!newContent.equals(currentContent)) {
     dispatch(newMessage(convertToRaw(newContent)));
   }
   dispatch(setEditorStateSuccess(editorState));
