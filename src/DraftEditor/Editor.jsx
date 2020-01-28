@@ -107,7 +107,7 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       .getBlockForKey(selection.getStartKey());
     const currentContent = editorState.getCurrentContent();
     const newContent = newEditorState.getCurrentContent();
-    if (block.getType() === 'code-block' && newContent.equals(currentContent)) {
+    if (block.getType() === 'code-block' && !newContent.equals(currentContent)) {
       const data = block.getData().merge({ language: 'javascript' });
       const newBlock = block.merge({ data });
       const newContentState = newEditorState.getCurrentContent().merge({
