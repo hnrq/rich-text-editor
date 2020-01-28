@@ -1,0 +1,44 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+$width: 48px;
+$height: 24px;
+
+.switch-container{
+  display: inline-block;
+  width: $width;
+  height: $height;
+  border: 3px solid #bfbebe;
+  border-radius: $height;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #f5f2f2;
+  transition: border-color 300ms;
+
+  .btn-switch{
+    height: $height;
+    transition: all 300ms;
+    &.active {
+      background-color: $primary;
+      &::before{
+      margin-left: $height;
+      }
+    }
+    &::before{
+      content: '';
+      cursor: pointer;
+      display: inline-block;
+      width: $height / 1.5;
+      height: $height / 1.5;
+      margin-left: 2px;
+      margin-bottom: 1px;
+      background-color: white;
+      border-radius: 50%;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.5) ;
+      transition: all 300ms ease-in-out;
+    }
+    
+  }
+}
