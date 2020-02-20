@@ -1,24 +1,18 @@
 // @flow
 
 import React from 'react';
-import classNames from 'classnames';
 import type { EditorState } from 'draft-js';
-import {
-  FaBold,
-  FaItalic,
-  FaUnderline,
-  FaCode
-} from 'react-icons/fa';
+import { FaBold, FaItalic, FaUnderline, FaCode } from 'react-icons/fa';
 import StyleButton from './StyleButton';
 
 type Props = {
   /** DraftJS editor state */
   editorState: EditorState,
   /** Function to be called on toggle */
-  onToggle: Function, 
+  onToggle: Function,
   /** Array or string with CSS classes */
   classList: Array<string> | string
-}
+};
 
 const INLINE_STYLES = [
   { label: <FaBold />, style: 'BOLD' },
@@ -30,7 +24,7 @@ const INLINE_STYLES = [
 const InlineStyleControls = ({ editorState, onToggle, classList }: Props) => {
   const currentStyle = editorState.getCurrentInlineStyle();
   return (
-    <div className={classNames(classList, "d-flex flex-nowrap")}>
+    <>
       {INLINE_STYLES.map((type, index) => (
         <StyleButton
           active={currentStyle.has(type.style)}
@@ -40,7 +34,7 @@ const InlineStyleControls = ({ editorState, onToggle, classList }: Props) => {
           style={type.style}
         />
       ))}
-    </div>
+    </>
   );
 };
 

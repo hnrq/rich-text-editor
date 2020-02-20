@@ -18,6 +18,7 @@ import decorators from './decorator';
 import BlockStyleControls from './StyleControls/BlockStyleControls';
 import InlineStyleControls from './StyleControls/InlineStyleControls';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+import toolbarStyles from './toolbarStyles.module.scss';
 import './Editor.scss';
 
 type Props = {
@@ -30,7 +31,9 @@ const linkPlugin = createLinkPlugin({
 });
 const { LinkButton } = linkPlugin;
 
-const inlineToolbarPlugin = createInlineToolbarPlugin();
+const inlineToolbarPlugin = createInlineToolbarPlugin({
+  theme: { toolbarStyles }
+});
 const { InlineToolbar } = inlineToolbarPlugin;
 
 const DraftEditor = ({ readOnly, classList }: Props) => {
@@ -107,7 +110,10 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       .getBlockForKey(selection.getStartKey());
     const currentContent = editorState.getCurrentContent();
     const newContent = newEditorState.getCurrentContent();
-    if (block.getType() === 'code-block' && !newContent.equals(currentContent)) {
+    if (
+      block.getType() === 'code-block' &&
+      !newContent.equals(currentContent)
+    ) {
       const data = block.getData().merge({ language: 'javascript' });
       const newBlock = block.merge({ data });
       const newContentState = newEditorState.getCurrentContent().merge({
@@ -163,13 +169,19 @@ const DraftEditor = ({ readOnly, classList }: Props) => {
       {!readOnly && (
         <InlineToolbar>
           {(externalProps) => (
-            <div className="inline-toolbar-draft">
+            <div className="inline-toolbar-draft d-flex flex-nowrap">
               <InlineStyleControls
                 editorState={editorState}
                 onToggle={toggleInlineStyle}
                 {...externalProps}
               />
-              <LinkButton {...externalProps} />
+              <LinkButton
+                {...externalProps}
+                theme={{
+                  button: 'btn btn-link style-button',
+                  active: 'btn-active'
+                }}
+              />
             </div>
           )}
         </InlineToolbar>

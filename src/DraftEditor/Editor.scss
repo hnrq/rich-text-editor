@@ -52,8 +52,10 @@
     & button {
       background: none;
       color: lighten(theme-color('dark'), 45%);
+      fill: lighten(theme-color('dark'), 45%);
       &.btn-active {
         color: lighten(theme-color('dark'), 80%);
+        fill: lighten(theme-color('dark'), 80%);
       }
     }
   }

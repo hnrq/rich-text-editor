@@ -1,10 +1,10 @@
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 
 button.style-button.btn-link {
-  color: lighten(theme-color("dark"),45%);
+  color: lighten(theme-color('dark'), 45%);
   &.btn-active {
-    color: theme-color("dark");
+    color: theme-color('dark');
   }
 }
