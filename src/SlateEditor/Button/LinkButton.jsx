@@ -1,49 +1,48 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSlate } from 'slate-react';
+import { IoMdClose } from 'react-icons/io';
 import { isLinkActive, insertLink } from 'utils/slateUtils';
 import classNames from 'classnames';
 import './Button.scss';
 import './LinkButton.scss';
 
 type Props = {
-  children: React$Element<any>
+  children: React$Element<any>,
+  onDisplayInput: Function
 };
 
-const LinkButton = ({ children }: Props) => {
+const LinkButton = ({ children, onDisplayInput }: Props) => {
   const editor = useSlate();
   const inputRef = useRef(null);
   const [urlValue, setUrlValue] = useState('');
   const [showURLInput, setShowURLInput] = useState(false);
-
-  const submitLink = (e) => {
-    e.preventDefault();
-    insertLink(editor, urlValue);
-    setShowURLInput(false);
-  };
-
+  useEffect(() => {
+    onDisplayInput(showURLInput);
+  }, [showURLInput, onDisplayInput]);
   return (
-    <div className="link-button">
-      <form
-        className={classNames('input-group', { 'd-none': !showURLInput })}
-        onSubmit={submitLink}
-      >
+    <>
+      <div className={classNames('input-section', { 'd-none': !showURLInput })}>
         <input
           ref={inputRef}
           type="text"
           className="form-control"
           value={urlValue}
           placeholder="Ex.: www.google.com"
+          onKeyDown={(event) => {
+            const { key } = event;
+            if (key === 'Enter') {
+              event.preventDefault();
+              insertLink(editor, urlValue);
+              setShowURLInput(false);
+            }
+          }}
           onChange={(e) => setUrlValue(e.target.value)}
           onBlur={(e) => setShowURLInput(false)}
         />
-        <div className="input-group-append">
-          <input
-            className="btn btn-outline-secondary"
-            type="submit"
-            value="Add"
-          />
-        </div>
-      </form>
+        <button className="btn btn-link btn-close">
+          <IoMdClose />
+        </button>
+      </div>
       <button
         className={classNames('btn btn-link', {
           active: isLinkActive(editor),
@@ -56,8 +55,12 @@ const LinkButton = ({ children }: Props) => {
       >
         {children}
       </button>
-    </div>
+    </>
   );
+};
+
+LinkButton.defaultProps = {
+  onDisplayInput: () => {}
 };
 
 export default LinkButton;

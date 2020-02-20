@@ -1,5 +1,17 @@
-.link-button {
-  & > form {
-    width: 200px;
+.input-section {
+  position: absolute;
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  width: 100%;
+  & > input {
+    margin: 4px 2px;
+    height: 30px;
+    &::placeholder {
+      color: #888;
+    }
+    background-color: #222;
+    color: #ccc;
+    border: none;
   }
 }

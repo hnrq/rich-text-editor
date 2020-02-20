@@ -1,26 +1,26 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { createEditor } from 'slate';
+import { createEditor, Text } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
-import { toggleFormat, toggleBlock } from 'utils/slateUtils';
+import { toggleFormat, toggleBlock, withLinks } from 'utils/slateUtils';
 import { withHistory } from 'slate-history';
 import './TextEditor.scss';
 import {
   FaHeading,
   FaListOl,
-  FaUnderline,
-  FaBold,
-  FaItalic,
   FaListUl,
   FaCode,
-  FaLink,
   FaQuoteRight
 } from 'react-icons/fa';
+import linkifyIt from 'linkify-it';
 import handleKeyDown from './handleKeyDown';
 import InlineToolbar from './InlineToolbar';
+import { HASHTAG_REGEX } from 'utils/regex';
 import Toolbar from './Toolbar';
-import { BlockButton, MarkButton, LinkButton } from './Button';
+import { BlockButton } from './Button';
 import { Element } from './Element';
 import { Leaf } from './Leaf';
+
+const linkify = linkifyIt();
 
 type Props = {
   /** If the Editor is readOnly */
@@ -30,7 +30,10 @@ type Props = {
 };
 
 const Editor = ({ readOnly, classList }: Props) => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => withLinks(withHistory(withReact(createEditor()))),
+    []
+  );
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const [editorValue, setEditorValue] = useState([
@@ -40,6 +43,33 @@ const Editor = ({ readOnly, classList }: Props) => {
     }
   ]);
 
+  const decorate = useCallback(([node, path]) => {
+    const ranges = [];
+    if (Text.isText(node)) {
+      const { text } = node;
+      const parts = text.split(' ');
+      let offset = 0;
+      parts.forEach((part, index) => {
+        if (linkify.test(part)) {
+          ranges.push({
+            anchor: { path, offset: offset + part.length },
+            focus: { path, offset },
+            link: true
+          });
+        }
+        if (HASHTAG_REGEX.test(part)) {
+          ranges.push({
+            anchor: { path, offset: offset + part.length },
+            focus: { path, offset },
+            hashtag: true
+          });
+        }
+        offset = offset + part.length + 1;
+      });
+    }
+    return ranges;
+  }, []);
+
   return (
     <Slate
       editor={editor}
@@ -48,21 +78,6 @@ const Editor = ({ readOnly, classList }: Props) => {
     >
       <InlineToolbar />
       <Toolbar>
-        <MarkButton format="bold">
-          <FaBold />
-        </MarkButton>
-        <MarkButton format="italic">
-          <FaItalic />
-        </MarkButton>
-        <MarkButton format="underlined">
-          <FaUnderline />
-        </MarkButton>
-        <MarkButton format="code">
-          <FaCode />
-        </MarkButton>
-        <LinkButton>
-          <FaLink />
-        </LinkButton>
         <BlockButton format="heading-one">
           <FaHeading />
         </BlockButton>
@@ -88,6 +103,7 @@ const Editor = ({ readOnly, classList }: Props) => {
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         autoFocus
+        decorate={decorate}
         onDOMBeforeInput={(event) => {
           switch (event.inputType) {
             case 'formatBold':

@@ -12,7 +12,7 @@
   border-radius: 4px;
   transition: opacity 0.2s;
   display: flex;
-  background: #333;
+  background: #111;
   flex-wrap: nowrap;
   box-shadow: 0px 1px 3px 0px rgba(220, 220, 220, 1);
   box-sizing: border-box;
@@ -28,20 +28,20 @@
     pointer-events: none;
   }
   &:after {
-    border-top-color: #333;
+    border-top-color: #111;
     z-index: 2;
     border-width: 4px;
     margin-left: -4px;
   }
   &:before {
     z-index: 2;
-    border-top-color: #333;
+    border-top-color: #111;
     border-width: 6px;
     margin-left: -6px;
   }
   & button.btn.btn-link {
     background: none;
-    color: lighten(theme-color('dark'), 45%);
+    color: lighten(theme-color('dark'), 50%);
     &.active {
       color: lighten(theme-color('dark'), 80%);
     }

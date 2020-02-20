@@ -106,19 +106,20 @@ export const insertLink = (editor, url) => {
 
 export const withLinks = (editor) => {
   const { insertData, insertText, isInline } = editor;
+  const editorWithLinks = editor;
 
-  editor.isInline = (el) => (el.type === 'link' ? true : isInline(el));
+  editorWithLinks.isInline = (el) => (el.type === 'link' ? true : isInline(el));
 
-  editor.insertText = (text) => {
-    if (text && isUrl(text)) wrapLink(editor, text);
+  editorWithLinks.insertText = (text) => {
+    if (text && isUrl(text)) wrapLink(editorWithLinks, text);
     else insertText(text);
   };
 
-  editor.insertData = (data) => {
+  editorWithLinks.insertData = (data) => {
     const text = data.getData('text/plain');
-    if (text && isUrl(text)) wrapLink(editor, text);
+    if (text && isUrl(text)) wrapLink(editorWithLinks, text);
     else insertData(data);
   };
 
-  return editor;
+  return editorWithLinks;
 };

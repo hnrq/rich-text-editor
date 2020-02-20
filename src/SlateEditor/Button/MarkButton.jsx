@@ -1,8 +1,8 @@
-import React from "react";
-import { useSlate } from "slate-react";
-import classNames from "classnames";
+import React from 'react';
+import { useSlate } from 'slate-react';
+import classNames from 'classnames';
 import './Button.scss';
-import { isMarkActive, toggleMark } from "utils/slateUtils";
+import { isMarkActive, toggleMark } from 'utils/slateUtils';
 
 type Props = {
   format: 'string',
@@ -13,7 +13,7 @@ const MarkButton = ({ format, children }: Props) => {
   const editor = useSlate();
   return (
     <button
-      className={classNames("btn btn-link", {
+      className={classNames('btn btn-link', {
         active: isMarkActive(editor, format)
       })}
       onClick={(event) => {
