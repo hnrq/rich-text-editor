@@ -16,6 +16,7 @@ import handleKeyDown from './handleKeyDown';
 import InlineToolbar from './InlineToolbar';
 import { HASHTAG_REGEX } from 'utils/regex';
 import Toolbar from './Toolbar';
+import { execAll } from 'utils';
 import { BlockButton } from './Button';
 import { Element } from './Element';
 import { Leaf } from './Leaf';
@@ -47,25 +48,22 @@ const Editor = ({ readOnly, classList }: Props) => {
     const ranges = [];
     if (Text.isText(node)) {
       const { text } = node;
-      const parts = text.split(' ');
-      let offset = 0;
-      parts.forEach((part, index) => {
-        if (linkify.test(part)) {
+      if (text) {
+        (linkify.match(text) || []).forEach(({ index, lastIndex }) => {
           ranges.push({
-            anchor: { path, offset: offset + part.length },
-            focus: { path, offset },
+            anchor: { path, offset: lastIndex },
+            focus: { path, offset: index },
             link: true
           });
-        }
-        if (HASHTAG_REGEX.test(part)) {
+        });
+        execAll(text, HASHTAG_REGEX).forEach(({ index, lastIndex }) => {
           ranges.push({
-            anchor: { path, offset: offset + part.length },
-            focus: { path, offset },
+            anchor: { path, offset: lastIndex },
+            focus: { path, offset: index },
             hashtag: true
           });
-        }
-        offset = offset + part.length + 1;
-      });
+        });
+      }
     }
     return ranges;
   }, []);

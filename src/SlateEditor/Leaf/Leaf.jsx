@@ -14,7 +14,7 @@ const Leaf = ({ attributes, children, leaf }: Props) => {
   if (leaf.italic) leafChildren = <em>{leafChildren}</em>;
   if (leaf.underlined) leafChildren = <u>{leafChildren}</u>;
   if (leaf.link) leafChildren = <a href={leaf.text}>{leafChildren}</a>;
-  if (leaf.hashtag)
+  if (leaf.hashtag && !leaf.link)
     leafChildren = (
       <a href={leaf.text} className="text-muted">
         {leafChildren}

@@ -8,3 +8,14 @@ export function debounce(fn, time) {
     timeout = setTimeout(functionCall, time);
   };
 }
+
+export const execAll = (text, regExp) => {
+  const result = [];
+  let match;
+  while ((match = regExp.exec(text)) !== null)
+    result.push({
+      ...match,
+      lastIndex: regExp.lastIndex
+    });
+  return result;
+};
