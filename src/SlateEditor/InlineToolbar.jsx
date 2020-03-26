@@ -1,24 +1,21 @@
 import React, { useRef, useEffect } from 'react';
-import { useSlate, ReactEditor } from 'slate-react';
+import { useSlate } from 'slate-react';
 import { Editor, Range } from 'slate';
-import { FaBold, FaItalic, FaUnderline, FaCode } from 'react-icons/fa';
+import { FaBold, FaItalic, FaUnderline, FaCode, FaLink } from 'react-icons/fa';
 import { createPortal } from 'react-dom';
-import { MarkButton } from './Button';
+import { MarkButton, LinkButton } from './Button';
 import './InlineToolbar.scss';
 
 const InlineToolbar = () => {
   const ref = useRef();
-  // const [displayInput, setDisplayInput] = useState(false);
   const editor = useSlate();
   const { selection } = editor;
 
   useEffect(() => {
     const element = ref.current;
-
     if (!element) return undefined;
     if (
       !selection ||
-      !ReactEditor.isFocused(editor) ||
       Range.isCollapsed(selection) ||
       Editor.string(editor, selection) === ''
     ) {
@@ -52,11 +49,9 @@ const InlineToolbar = () => {
       <MarkButton format="code">
         <FaCode />
       </MarkButton>
-      {/* <LinkButton
-        onDisplayInput={(value) => setDisplayInput(value)}
-      >
+      <LinkButton>
         <FaLink />
-      </LinkButton> */}
+      </LinkButton>
     </div>,
     document.body
   );

@@ -9,7 +9,7 @@ type Props = {
   children: React$Element<any>
 };
 
-const BlockButton = ({ format, children }: Props) => {
+const BlockButton = React.memo(({ format, children }: Props) => {
   const editor = useSlate();
   return (
     <button
@@ -24,6 +24,6 @@ const BlockButton = ({ format, children }: Props) => {
       {children}
     </button>
   );
-};
+}, (prevProps, nextProps) => prevProps.format === nextProps.format);
 
-export default React.memo(BlockButton);
+export default BlockButton;

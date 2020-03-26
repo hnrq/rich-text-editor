@@ -9,7 +9,7 @@ type Props = {
   children: React$Element<any>
 };
 
-const MarkButton = ({ format, children }: Props) => {
+const MarkButton = React.memo(({ format, children }: Props) => {
   const editor = useSlate();
   return (
     <button
@@ -24,6 +24,6 @@ const MarkButton = ({ format, children }: Props) => {
       {children}
     </button>
   );
-};
+}, (prevProps, nextProps) => prevProps.format === nextProps.format);
 
-export default React.memo(MarkButton);
+export default MarkButton;

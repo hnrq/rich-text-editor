@@ -1,4 +1,4 @@
-import { Editor, Transforms, Range } from 'slate';
+import { Editor, Transforms } from 'slate';
 import isUrl from 'is-url';
 
 export const TEXT_FORMATS = ['bold', 'italic', 'underlined', 'code'];
@@ -73,42 +73,28 @@ export const toggleMark = (editor, format) => {
 };
 
 export const isLinkActive = (editor) => {
-  const [link] = Editor.nodes(editor, { match: (n) => n.type === 'link' });
+  const [link] = Editor.nodes(editor, { match: (n) => n.type === 'anchor' });
   return !!link;
 };
 
 export const unwrapLink = (editor) => {
-  Transforms.unwrapNodes(editor, { match: (n) => n.type === 'link' });
+  Transforms.unwrapNodes(editor, { match: (n) => n.type === 'anchor' });
 };
 
-const wrapLink = (editor, url) => {
-  if (isLinkActive(editor)) unwrapLink(editor);
-
-  const { selection } = editor;
-  const isCollapsed = selection && Range.isCollapsed(selection);
+export const wrapLink = (editor, url) => {
   const link = {
-    type: 'link',
+    type: 'anchor',
     url,
-    children: isCollapsed ? [{ text: url }] : []
+    children: []
   };
-
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, link);
-  } else {
-    Transforms.wrapNodes(editor, link, { split: true });
-    Transforms.collapse(editor, { edge: 'end' });
-  }
-};
-
-export const insertLink = (editor, url) => {
-  if (editor.selection) wrapLink(editor, url);
+  Transforms.wrapNodes(editor, link, { split: true });
 };
 
 export const withLinks = (editor) => {
   const { insertData, insertText, isInline } = editor;
   const editorWithLinks = editor;
 
-  editorWithLinks.isInline = (el) => (el.type === 'link' ? true : isInline(el));
+  editorWithLinks.isInline = (el) => (el.type === 'anchor' ? true : isInline(el));
 
   editorWithLinks.insertText = (text) => {
     if (text && isUrl(text)) wrapLink(editorWithLinks, text);
@@ -122,4 +108,16 @@ export const withLinks = (editor) => {
   };
 
   return editorWithLinks;
+};
+
+export const wrapDecoration = (text, path, regExp, decoratorKey) => {
+  const ranges = [];
+  let match;
+  while ((match = regExp.exec(text)) !== null)
+    ranges.push({
+      anchor: { path, offset: regExp.lastIndex },
+      focus: { path, offset: match.index },
+      [decoratorKey]: true
+    });
+  return ranges;
 };

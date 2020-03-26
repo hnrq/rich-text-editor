@@ -1,7 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { createEditor, Text } from 'slate';
+import { createEditor, Text, Transforms } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
-import { toggleFormat, toggleBlock, withLinks } from 'utils/slateUtils';
+import { 
+  toggleFormat, 
+  toggleBlock, 
+  withLinks,
+  wrapDecoration
+} from 'utils/slateUtils';
 import { withHistory } from 'slate-history';
 import './TextEditor.scss';
 import {
@@ -16,12 +21,9 @@ import handleKeyDown from './handleKeyDown';
 import InlineToolbar from './InlineToolbar';
 import { HASHTAG_REGEX } from 'utils/regex';
 import Toolbar from './Toolbar';
-import { execAll } from 'utils';
 import { BlockButton } from './Button';
 import { Element } from './Element';
 import { Leaf } from './Leaf';
-
-const linkify = linkifyIt();
 
 type Props = {
   /** If the Editor is readOnly */
@@ -29,6 +31,9 @@ type Props = {
   /** List of CSS classes */
   classList: string | Array<string>
 };
+
+const linkify = linkifyIt();
+Transforms.deselect = () => {};
 
 const Editor = ({ readOnly, classList }: Props) => {
   const editor = useMemo(
@@ -50,20 +55,14 @@ const Editor = ({ readOnly, classList }: Props) => {
       const { text } = node;
       if (text) {
         (linkify.match(text) || []).forEach(({ index, lastIndex }) => {
-          ranges.push({
-            anchor: { path, offset: lastIndex },
-            focus: { path, offset: index },
-            link: true
+            ranges.push({
+              anchor: { path, offset: lastIndex },
+              focus: { path, offset: index },
+              link: true
+            });
           });
-        });
-        execAll(text, HASHTAG_REGEX).forEach(({ index, lastIndex }) => {
-          ranges.push({
-            anchor: { path, offset: lastIndex },
-            focus: { path, offset: index },
-            hashtag: true
-          });
-        });
-      }
+        ranges.push(...wrapDecoration(text, path, HASHTAG_REGEX, 'hashtag'));
+      }    
     }
     return ranges;
   }, []);

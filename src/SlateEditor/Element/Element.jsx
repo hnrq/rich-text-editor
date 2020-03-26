@@ -9,7 +9,7 @@ type Props = {
 
 export default function Element({ attributes, children, element }: Props) {
   switch (element.type) {
-    case 'link':
+    case 'anchor':
       return (
         <a {...attributes} href={element.url}>
           {children}
