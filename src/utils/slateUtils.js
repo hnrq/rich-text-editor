@@ -1,4 +1,5 @@
 import { Editor, Transforms } from 'slate';
+import imageExtensions from 'image-extensions';
 import isUrl from 'is-url';
 
 export const TEXT_FORMATS = ['bold', 'italic', 'underlined', 'code'];
@@ -90,34 +91,62 @@ export const wrapLink = (editor, url) => {
   Transforms.wrapNodes(editor, link, { split: true });
 };
 
-export const withLinks = (editor) => {
-  const { insertData, insertText, isInline } = editor;
-  const editorWithLinks = editor;
+export const insertImage = (editor, url) => {
+  const text = { text: '' };
+  const image = { type: 'image', url, children: [text] };
+  Transforms.insertNodes(editor, image);
+};
 
-  editorWithLinks.isInline = (el) => (el.type === 'anchor' ? true : isInline(el));
+export const isImageUrl = url => {
+  if (!url) return false;
+  if (!isUrl(url)) return false;
+  const ext = new URL(url).pathname.split('.').pop();
+  return imageExtensions.includes(ext);
+};
 
-  editorWithLinks.insertText = (text) => {
-    if (text && isUrl(text)) wrapLink(editorWithLinks, text);
+export const withRich = (editor) => {
+  const { 
+    insertData, 
+    isVoid, 
+    isInline,
+    insertText
+  } = editor;
+  editor.isVoid = (element) => element.type === 'image' || element.type === 'mention' ? true : isVoid(element);
+  editor.isInline = (element) => element.type === 'mention' || element.type === 'anchor' ? true : isInline(element)
+
+  editor.insertText = (text) => {
+    if (text && isUrl(text)) wrapLink(editor, text);
     else insertText(text);
   };
 
-  editorWithLinks.insertData = (data) => {
+  editor.insertData = (data) => {
     const text = data.getData('text/plain');
-    if (text && isUrl(text)) wrapLink(editorWithLinks, text);
+    const { files } = data;
+    
+    if (text && isUrl(text)) wrapLink(editor, text);
     else insertData(data);
-  };
 
-  return editorWithLinks;
-};
+    if (files && files.length > 0)
+      for (const file of files) {
+        const reader = new FileReader();
+        const [mime] = file.type.split('/');
+        if (mime === 'image') {
+          reader.addEventListener('load', () => {
+            const url = reader.result
+            insertImage(editor, url)
+          });
+          reader.readAsDataURL(file);
+        }
+      }
+    else if (isImageUrl(text)) insertImage(editor, text);
+    else insertData(data);
+  }
 
-export const wrapDecoration = (text, path, regExp, decoratorKey) => {
-  const ranges = [];
-  let match;
-  while ((match = regExp.exec(text)) !== null)
-    ranges.push({
-      anchor: { path, offset: regExp.lastIndex },
-      focus: { path, offset: match.index },
-      [decoratorKey]: true
-    });
-  return ranges;
-};
+  return editor;
+}
+
+export const insertMention = (editor, character) => {
+  const mention = { type: 'mention', character, children: [{ text: '' }] }
+  Transforms.insertNodes(editor, mention)
+  Transforms.move(editor)
+}

@@ -1,20 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useEditor } from 'slate-react';
+import { useSlate } from 'slate-react';
 import { IoMdClose } from 'react-icons/io';
-import linkifyIt from 'linkify-it';
-import { isLinkActive, wrapLink, unwrapLink } from 'utils/slateUtils';
+import { isImageUrl, insertImage } from 'utils/slateUtils';
 import classNames from 'classnames';
 import './Button.scss';
-import './LinkButton.scss';
+import './ImageButton.scss';
 
 type Props = {
   children: React$Element<any>
 };
 
-const linkify = linkifyIt();
-
-const LinkButton = ({ children }: Props) => {
-  const editor = useEditor();
+const ImageButton = ({ children }: Props) => {
+  const editor = useSlate();
   const inputRef = useRef(null);
   const [urlValue, setUrlValue] = useState('');
   const [showURLInput, setShowURLInput] = useState(false);
@@ -28,23 +25,23 @@ const LinkButton = ({ children }: Props) => {
   }, [showURLInput]);
 
   return (
-    <>
-      <div className={classNames('anchor-input-section', { 'visible': showURLInput, 'invisible': !showURLInput})}>
+    <div className="btn-image">
+      <div className={classNames('image-input-section align-items-center flex-row', { 'd-flex': showURLInput, 'd-none': !showURLInput})}>
         <input
           ref={inputRef}
           type="text"
           className={classNames("form-control", { 'invalid': !isValid })}
           value={urlValue}
-          placeholder="Ex.: www.google.com"
+          placeholder="Ex.: imgur.com/abc.jpg"
           onKeyDown={(e) => {
             const { key } = e;
-            console.log(linkify.test(urlValue))
-            if (!linkify.test(urlValue)) setIsValid(false);
             if (key === 'Enter') {
               e.preventDefault();
-              if (linkify.test(urlValue)) {
-                wrapLink(editor, urlValue);
+              if (isImageUrl(urlValue)) {
+                insertImage(editor, urlValue);
                 setShowURLInput(false);
+              } else { 
+                setIsValid(false);
               }
             }
           }}
@@ -63,23 +60,15 @@ const LinkButton = ({ children }: Props) => {
       </div>
       <button
         className={classNames('btn btn-link btn-anchor', {
-          active: isLinkActive(editor),
-          'visible': !showURLInput,
-          'invisible': showURLInput
+          'd-inline-block': !showURLInput,
+          'd-none': showURLInput
         })}
-        onMouseDown={(e) => {
-          e.preventDefault();
-          if (isLinkActive(editor)) {
-            unwrapLink(editor);
-            setUrlValue('');
-          }
-          else setShowURLInput(true);
-        }}
+        onMouseDown={(e) => setShowURLInput(true)}
       >
         {children}
       </button>
-    </>
+    </div>
   );
 };
 
-export default LinkButton;
+export default ImageButton;

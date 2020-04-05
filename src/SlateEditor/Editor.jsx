@@ -4,9 +4,9 @@ import { Slate, Editable, withReact } from 'slate-react';
 import { 
   toggleFormat, 
   toggleBlock, 
-  withLinks,
-  wrapDecoration
+  withRich
 } from 'utils/slateUtils';
+import { execAll } from 'utils';
 import { withHistory } from 'slate-history';
 import './TextEditor.scss';
 import {
@@ -14,14 +14,15 @@ import {
   FaListOl,
   FaListUl,
   FaCode,
-  FaQuoteRight
+  FaQuoteRight,
+  FaFileImage
 } from 'react-icons/fa';
 import linkifyIt from 'linkify-it';
 import handleKeyDown from './handleKeyDown';
 import InlineToolbar from './InlineToolbar';
 import { HASHTAG_REGEX } from 'utils/regex';
 import Toolbar from './Toolbar';
-import { BlockButton } from './Button';
+import { BlockButton, ImageButton } from './Button';
 import { Element } from './Element';
 import { Leaf } from './Leaf';
 
@@ -37,7 +38,7 @@ Transforms.deselect = () => {};
 
 const Editor = ({ readOnly, classList }: Props) => {
   const editor = useMemo(
-    () => withLinks(withHistory(withReact(createEditor()))),
+    () => withRich(withHistory(withReact(createEditor()))),
     []
   );
   const renderElement = useCallback((props) => <Element {...props} />, []);
@@ -61,7 +62,13 @@ const Editor = ({ readOnly, classList }: Props) => {
               link: true
             });
           });
-        ranges.push(...wrapDecoration(text, path, HASHTAG_REGEX, 'hashtag'));
+        execAll(text, HASHTAG_REGEX).forEach(({ index, lastIndex }) => {
+          ranges.push({
+            anchor: { path, offset: lastIndex },
+            focus: { path, offset: index },
+            'hashtag': true
+          });
+        });
       }    
     }
     return ranges;
@@ -94,6 +101,7 @@ const Editor = ({ readOnly, classList }: Props) => {
         <BlockButton format="bulleted-list">
           <FaListUl />
         </BlockButton>
+        <ImageButton><FaFileImage /></ImageButton>
       </Toolbar>
       <Editable
         placeholder="Well, hello there!"

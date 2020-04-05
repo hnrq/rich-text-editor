@@ -1,0 +1,31 @@
+.btn-image {
+  .image-input-section {
+    width: 200px;
+    padding: 0 4px;
+    & input {
+      margin: 4px 2px;
+      height: 30px;
+      &::placeholder {
+        color: #888;
+      }
+      background-color: #333;
+      &:focus {
+        color: #ccc;
+        outline: 0;
+        background-color: #333;
+      }
+      color: #ccc;
+      border: none;
+      &.invalid {
+        box-shadow: 0 0 0 0.2rem rgba(200, 20, 20, 0.5) !important;
+      }
+    }
+    & .btn-close {
+      padding: 0 4px;
+      height: 100%;
+    }
+    & .btn-anchor {
+      background-color: #111;
+    }
+  }
+}

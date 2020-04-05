@@ -1,4 +1,5 @@
 import React, { Attributes } from 'react';
+import { ImageElement } from './ImageElement/';
 import type { Element as ElementType } from 'slate';
 
 type Props = {
@@ -7,14 +8,13 @@ type Props = {
   element: ElementType
 };
 
-export default function Element({ attributes, children, element }: Props) {
+export default function Element(props: Props) {
+  const { attributes, children, element } = props;
   switch (element.type) {
     case 'anchor':
-      return (
-        <a {...attributes} href={element.url}>
-          {children}
-        </a>
-      );
+      return <a {...attributes} href={element.url}>{children}</a>;
+    case 'image':
+      return <ImageElement {...props} />;
     case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>;
     case 'bulleted-list':
