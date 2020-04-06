@@ -1,6 +1,8 @@
-import { Editor, Transforms } from 'slate';
+import { Editor, Transforms, Range } from 'slate';
+import { EMOJI_REGEX } from 'utils/regex';
 import imageExtensions from 'image-extensions';
 import isUrl from 'is-url';
+import emojis from 'utils/emojis';
 
 export const TEXT_FORMATS = ['bold', 'italic', 'underlined', 'code'];
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -62,6 +64,37 @@ export const toggleFormat = (editor, format) => {
     { match: Text.isText, split: true }
   );
 };
+
+export const withEmojis = (editor) => {
+  const { isInline, isVoid, insertText } = editor;
+  editor.isInline = (element) => element.type === 'emoji' ? true : isInline(element);
+  editor.isVoid = (element) => element.type === 'emoji' ? true : isVoid(element);
+  editor.insertText = (text) => {
+    const { selection } = editor;
+    if (selection && Range.isCollapsed(selection)) {
+      const [start] = Range.edges(selection)
+      const wordBefore = Editor.before(editor, start, { unit: 'word' });
+      const before = wordBefore && Editor.before(editor, wordBefore);
+      const beforeRange = before && Editor.range(editor, before, start);
+      const beforeText = beforeRange && Editor.string(editor, beforeRange);
+      const beforeMatch = beforeText && beforeText.match(EMOJI_REGEX);
+      console.log(wordBefore, before, beforeRange, beforeText, beforeMatch)
+      if(beforeMatch) insertEmoji(editor, beforeText, beforeRange);
+    }
+    insertText(text);
+  }
+  return editor;
+}
+
+export const insertEmoji = (editor, emojiKey, selection) => {
+  if(emojis[emojiKey.slice(1, -1)]){
+    const { emoji } = emojis[emojiKey.slice(1, -1)];
+    const node = { type: 'emoji', emoji , children: [{ text: emojiKey }] };
+    Transforms.select(editor, selection);
+    Transforms.insertNodes(editor, node);
+    Transforms.move(editor);
+  }
+}
 
 export const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);

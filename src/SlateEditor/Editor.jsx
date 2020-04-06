@@ -4,7 +4,8 @@ import { Slate, Editable, withReact } from 'slate-react';
 import { 
   toggleFormat, 
   toggleBlock, 
-  withRich
+  withRich,
+  withEmojis
 } from 'utils/slateUtils';
 import { execAll } from 'utils';
 import { withHistory } from 'slate-history';
@@ -36,9 +37,9 @@ type Props = {
 const linkify = linkifyIt();
 Transforms.deselect = () => {};
 
-const Editor = ({ readOnly, classList }: Props) => {
+const SlateEditor = ({ readOnly, classList }: Props) => {
   const editor = useMemo(
-    () => withRich(withHistory(withReact(createEditor()))),
+    () => withEmojis(withRich(withHistory(withReact(createEditor())))),
     []
   );
   const renderElement = useCallback((props) => <Element {...props} />, []);
@@ -66,7 +67,7 @@ const Editor = ({ readOnly, classList }: Props) => {
           ranges.push({
             anchor: { path, offset: lastIndex },
             focus: { path, offset: index },
-            'hashtag': true
+            hashtag: true
           });
         });
       }    
@@ -129,4 +130,4 @@ const Editor = ({ readOnly, classList }: Props) => {
   );
 };
 
-export default Editor;
+export default SlateEditor;

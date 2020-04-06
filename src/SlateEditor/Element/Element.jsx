@@ -11,6 +11,8 @@ type Props = {
 export default function Element(props: Props) {
   const { attributes, children, element } = props;
   switch (element.type) {
+    case 'emoji':
+      return <span {...attributes}>{element.emoji}</span>
     case 'anchor':
       return <a {...attributes} href={element.url}>{children}</a>;
     case 'image':
