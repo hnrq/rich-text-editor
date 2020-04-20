@@ -9,8 +9,8 @@ type Props = {
   children: React$Element<any>
 };
 
-const Toolbar = React.memo(({ children, classList }: Props) => (
+const Toolbar = ({ children, classList }: Props) => (
   <div className={classNames(classList, "toolbar")}>{children}</div>
-), (prevProps, nextProps) => prevProps.children === nextProps.children);
+);
 
 export default Toolbar;

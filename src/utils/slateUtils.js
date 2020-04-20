@@ -1,5 +1,5 @@
 import { Editor, Transforms, Range } from 'slate';
-import { EMOJI_REGEX } from 'utils/regex';
+import { LAST_EMOJI_REGEX } from 'utils/regex';
 import imageExtensions from 'image-extensions';
 import isUrl from 'is-url';
 import emojis from 'utils/emojis';
@@ -56,14 +56,13 @@ export const isFormatActive = (editor, format) => {
   return !!match;
 };
 
-export const toggleFormat = (editor, format) => {
-  const isActive = isFormatActive(editor, format);
-  Transforms.setNodes(
-    editor,
-    { [format]: isActive ? null : true },
-    { match: Text.isText, split: true }
-  );
-};
+export const getCurrentWord = (editor, range, punctuation = '_') => {
+  const wordBefore = Editor.before(editor, range, { unit: 'word' });
+  const before = wordBefore && Editor.before(editor, wordBefore);
+  const beforeRange = before && Editor.range(editor, before, range);
+  const beforeText = beforeRange && Editor.string(editor, beforeRange);
+  return beforeText?.charAt(0) === punctuation ? getCurrentWord(editor, beforeRange): { text: beforeText, range: beforeRange };
+}
 
 export const withEmojis = (editor) => {
   const { isInline, isVoid, insertText } = editor;
@@ -72,25 +71,26 @@ export const withEmojis = (editor) => {
   editor.insertText = (text) => {
     const { selection } = editor;
     if (selection && Range.isCollapsed(selection)) {
-      const [start] = Range.edges(selection)
-      const wordBefore = Editor.before(editor, start, { unit: 'word' });
-      const before = wordBefore && Editor.before(editor, wordBefore);
-      const beforeRange = before && Editor.range(editor, before, start);
-      const beforeText = beforeRange && Editor.string(editor, beforeRange);
-      const beforeMatch = beforeText && beforeText.match(EMOJI_REGEX);
-      console.log(wordBefore, before, beforeRange, beforeText, beforeMatch)
-      if(beforeMatch) insertEmoji(editor, beforeText, beforeRange);
+      const [start] = Range.edges(selection);
+      const wordBefore = getCurrentWord(editor, start);
+      const emojiMatch = LAST_EMOJI_REGEX.exec(wordBefore.text);
+      if(emojiMatch) insertEmoji(editor, emojiMatch[1]);
     }
     insertText(text);
   }
   return editor;
 }
 
-export const insertEmoji = (editor, emojiKey, selection) => {
-  if(emojis[emojiKey.slice(1, -1)]){
-    const { emoji } = emojis[emojiKey.slice(1, -1)];
+export const getTokenLength = (token) => {
+  if (typeof token === 'string') return token.length;
+  else if (typeof token.content === 'string') return token.content.length;
+  else return token.content.reduce((l, t) => l + getTokenLength(t), 0);
+};
+
+export const insertEmoji = (editor, emojiKey) => {
+  if(emojis[emojiKey]){
+    const { emoji } = emojis[emojiKey];
     const node = { type: 'emoji', emoji , children: [{ text: emojiKey }] };
-    Transforms.select(editor, selection);
     Transforms.insertNodes(editor, node);
     Transforms.move(editor);
   }
@@ -137,16 +137,11 @@ export const isImageUrl = url => {
   return imageExtensions.includes(ext);
 };
 
-export const withRich = (editor) => {
-  const { 
-    insertData, 
-    isVoid, 
-    isInline,
-    insertText
-  } = editor;
-  editor.isVoid = (element) => element.type === 'image' || element.type === 'mention' ? true : isVoid(element);
-  editor.isInline = (element) => element.type === 'mention' || element.type === 'anchor' ? true : isInline(element)
+export const withAnchors = (editor) => {
+  const { insertData, insertText, isInline } = editor;
 
+  editor.isInline = (element) => element.type === 'anchor' ? true : isInline(element);
+  
   editor.insertText = (text) => {
     if (text && isUrl(text)) wrapLink(editor, text);
     else insertText(text);
@@ -154,10 +149,23 @@ export const withRich = (editor) => {
 
   editor.insertData = (data) => {
     const text = data.getData('text/plain');
+    if (text && isUrl(text)) wrapLink(editor, text);
+    else insertData(data);
+  };
+
+  return editor;
+}
+
+export const withImages = (editor) => {
+  const { insertData, isVoid } = editor;
+
+  editor.isVoid = (element) => element.type === 'image' ? true : isVoid(element);
+
+  editor.insertData = (data) => {
+    const text = data.getData('text/plain');
     const { files } = data;
     
     if (text && isUrl(text)) wrapLink(editor, text);
-    else insertData(data);
 
     if (files && files.length > 0)
       for (const file of files) {
@@ -174,7 +182,6 @@ export const withRich = (editor) => {
     else if (isImageUrl(text)) insertImage(editor, text);
     else insertData(data);
   }
-
   return editor;
 }
 

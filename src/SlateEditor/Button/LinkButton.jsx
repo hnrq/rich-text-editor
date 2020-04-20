@@ -1,85 +1,78 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useEditor } from 'slate-react';
+import React from 'react';
 import { IoMdClose } from 'react-icons/io';
 import linkifyIt from 'linkify-it';
-import { isLinkActive, wrapLink, unwrapLink } from 'utils/slateUtils';
 import classNames from 'classnames';
 import './Button.scss';
 import './LinkButton.scss';
 
 type Props = {
-  children: React$Element<any>
+  children: React$Element<any>,
+  handleSubmit: (value: string) => void,
+  handleClick: () => void,
+  handleCloseInput: () => void,
+  buttonClassList: string | Array<string>,
+  showInput: boolean
 };
 
 const linkify = linkifyIt();
 
-const LinkButton = ({ children }: Props) => {
-  const editor = useEditor();
-  const inputRef = useRef(null);
-  const [urlValue, setUrlValue] = useState('');
-  const [showURLInput, setShowURLInput] = useState(false);
-  const [isValid, setIsValid] = useState(true);
-
-  useEffect(() => {
-    if (showURLInput) {
-      inputRef.current.focus();
-      setIsValid(true);
-    }
-  }, [showURLInput]);
-
-  return (
-    <>
-      <div className={classNames('anchor-input-section', { 'visible': showURLInput, 'invisible': !showURLInput})}>
-        <input
-          ref={inputRef}
-          type="text"
-          className={classNames("form-control", { 'invalid': !isValid })}
-          value={urlValue}
-          placeholder="Ex.: www.google.com"
-          onKeyDown={(e) => {
-            const { key } = e;
-            console.log(linkify.test(urlValue))
-            if (!linkify.test(urlValue)) setIsValid(false);
-            if (key === 'Enter') {
-              e.preventDefault();
-              if (linkify.test(urlValue)) {
-                wrapLink(editor, urlValue);
-                setShowURLInput(false);
-              }
-            }
-          }}
-          onChange={(e) => setUrlValue(e.target.value)}
-          onBlur={(e) => setShowURLInput(false)}
-        />
-        <button 
-          onMouseDown={(e) => {
+const LinkButton = React.forwardRef(({ 
+  children,
+  handleSubmit,
+  handleCloseInput,
+  handleClick,
+  buttonClassList,
+  showInput,
+  value,
+  handleChange
+}: Props, ref) => (
+  <>
+    <div className={classNames('anchor-input-section', showInput ? 'visible' : 'invisible')}>
+      <input
+        ref={ref}
+        type="text"
+        className={classNames("form-control", { 'invalid': !linkify.test(value) })}
+        value={value}
+        placeholder="Ex.: www.google.com"
+        onKeyDown={(e) => {
+          const { key } = e;
+          if (key === 'Enter') {
             e.preventDefault();
-            setShowURLInput(false);
-          }} 
-          className="btn btn-link btn-close"
-        >
-          <IoMdClose />
-        </button>
-      </div>
-      <button
-        className={classNames('btn btn-link btn-anchor', {
-          active: isLinkActive(editor),
-          'visible': !showURLInput,
-          'invisible': showURLInput
-        })}
-        onMouseDown={(e) => {
-          e.preventDefault();
-          if (isLinkActive(editor)) {
-            unwrapLink(editor);
-            setUrlValue('');
+            if (linkify.test(value)) {
+              handleSubmit();
+              handleCloseInput();
+            }
           }
-          else setShowURLInput(true);
         }}
+        onChange={(e) => handleChange(e.target.value)}
+        onBlur={handleCloseInput}
+      />
+      <button 
+        onMouseDown={handleCloseInput} 
+        className="btn btn-link btn-close"
       >
-        {children}
+        <IoMdClose />
       </button>
-    </>
-  );
+    </div>
+    <button
+      className={classNames('btn btn-link btn-anchor', 
+      showInput ? 'invisible' : 'visible', 
+      buttonClassList)}
+      onMouseDown={handleClick}
+    >
+      {children}
+    </button>
+  </>
+));
+
+LinkButton.defaultProps = {
+  showInput: false
 };
 
-export default LinkButton;
+const areEqual = (prevProps, nextProps) => (
+  prevProps.showInput === nextProps.showInput
+  || prevProps.classList === nextProps.classList
+  || prevProps.urlValue === nextProps.urlValue
+);
+
+export default React.memo(LinkButton, areEqual);

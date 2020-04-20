@@ -1,6 +1,7 @@
 import React, { Attributes } from 'react';
 import { ImageElement } from './ImageElement/';
 import type { Element as ElementType } from 'slate';
+import isEqual from 'react-fast-compare';
 
 type Props = {
   attributes: Attributes,
@@ -8,11 +9,11 @@ type Props = {
   element: ElementType
 };
 
-export default function Element(props: Props) {
+export default React.memo((props: Props) => {
   const { attributes, children, element } = props;
   switch (element.type) {
     case 'emoji':
-      return <span {...attributes}>{element.emoji}</span>
+      return <span {...attributes}>{children}{element.emoji}</span>
     case 'anchor':
       return <a {...attributes} href={element.url}>{children}</a>;
     case 'image':
@@ -29,7 +30,9 @@ export default function Element(props: Props) {
       return <li {...attributes}>{children}</li>;
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>;
+    case 'code-block':
+      return <pre className="language-javascript" {...attributes}><code>{children}</code></pre>
     default:
       return <p {...attributes}>{children}</p>;
   }
-}
+}, (prevProps, nextProps) => isEqual(prevProps.children, nextProps.children))

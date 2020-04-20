@@ -1,15 +1,32 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useSlate } from 'slate-react';
+import classNames from 'classnames';
 import { Editor, Range } from 'slate';
 import { FaBold, FaItalic, FaUnderline, FaCode, FaLink } from 'react-icons/fa';
 import { createPortal } from 'react-dom';
-import { MarkButton, LinkButton } from './Button';
+import { 
+  isMarkActive,
+  isLinkActive,
+  toggleMark, 
+  wrapLink, 
+  unwrapLink 
+} from 'utils/slateUtils'
+import { Button, LinkButton } from './Button';
 import './InlineToolbar.scss';
 
 const InlineToolbar = () => {
   const ref = useRef();
+  const inputRef = useRef(null);
   const editor = useSlate();
   const { selection } = editor;
+  const [urlValue, setUrlValue] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState(false);
+
+  useEffect(() => {
+    if (showUrlInput) {
+      inputRef.current.focus();
+    }
+  }, [showUrlInput]);
 
   useEffect(() => {
     const element = ref.current;
@@ -37,19 +54,67 @@ const InlineToolbar = () => {
 
   return createPortal(
     <div ref={ref} className="inline-toolbar-slate">
-      <MarkButton format="bold">
+      <Button 
+        onClick={(event) => {
+        event.preventDefault();
+          toggleMark(editor, "bold");
+        }}
+        classList={classNames('btn-link', {
+          active: isMarkActive(editor, "bold")
+        })}
+      >
         <FaBold />
-      </MarkButton>
-      <MarkButton format="italic">
+      </Button>
+      <Button 
+        onClick={(event) => {
+        event.preventDefault();
+          toggleMark(editor, "italic");
+        }}
+        classList={classNames('btn-link', {
+          active: isMarkActive(editor, "italic")
+        })}
+      >
         <FaItalic />
-      </MarkButton>
-      <MarkButton format="underlined">
+      </Button>
+      <Button 
+        onClick={(event) => {
+        event.preventDefault();
+          toggleMark(editor, "underlined");
+        }}
+        classList={classNames('btn-link', {
+          active: isMarkActive(editor, "underlined")
+        })}
+      >
         <FaUnderline />
-      </MarkButton>
-      <MarkButton format="code">
+      </Button>
+      <Button 
+        onClick={(event) => {
+        event.preventDefault();
+          toggleMark(editor, "code");
+        }}
+        classList={classNames('btn-link', {
+          active: isMarkActive(editor, "code")
+        })}
+      >
         <FaCode />
-      </MarkButton>
-      <LinkButton>
+      </Button>
+      <LinkButton
+        handleSubmit={() => wrapLink(editor, urlValue)}
+        handleClick={(e) => {
+          e.preventDefault();
+          if (isLinkActive(editor)) {
+            unwrapLink(editor);
+            setUrlValue('');
+          }
+          else setShowUrlInput(true);
+        }}
+        handleCloseInput={() => setShowUrlInput(false)}
+        ref={inputRef}
+        buttonClassList={classNames({ active: isLinkActive(editor) })}
+        showInput={showUrlInput}
+        value={urlValue}
+        handleChange={setUrlValue}
+      >
         <FaLink />
       </LinkButton>
     </div>,

@@ -1,14 +1,28 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { createEditor, Text, Transforms } from 'slate';
+import { 
+  createEditor, 
+  Text, 
+  Transforms,
+  Range,
+  Node
+  } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
 import { 
-  toggleFormat, 
+  isBlockActive,
+  insertImage,
+  insertEmoji,
   toggleBlock, 
-  withRich,
-  withEmojis
+  withImages,
+  withAnchors,
+  withEmojis,
+  getTokenLength,
+  getCurrentWord
 } from 'utils/slateUtils';
+import emojis from 'utils/emojis';
+import Prism from 'prismjs';
 import { execAll } from 'utils';
 import { withHistory } from 'slate-history';
+import classNames from 'classnames';
 import './TextEditor.scss';
 import {
   FaHeading,
@@ -21,9 +35,10 @@ import {
 import linkifyIt from 'linkify-it';
 import handleKeyDown from './handleKeyDown';
 import InlineToolbar from './InlineToolbar';
-import { HASHTAG_REGEX } from 'utils/regex';
+import { HASHTAG_REGEX, BEFORE_EMOJI_REGEX } from 'utils/regex';
 import Toolbar from './Toolbar';
-import { BlockButton, ImageButton } from './Button';
+import { Button, ImageButton } from './Button';
+import { EmojiDropdown } from './EmojiDropdown/';
 import { Element } from './Element';
 import { Leaf } from './Leaf';
 
@@ -39,20 +54,71 @@ Transforms.deselect = () => {};
 
 const SlateEditor = ({ readOnly, classList }: Props) => {
   const editor = useMemo(
-    () => withEmojis(withRich(withHistory(withReact(createEditor())))),
-    []
+    () => withEmojis(withAnchors(withImages(withHistory(withReact(createEditor()))))), []
   );
-  const renderElement = useCallback((props) => <Element {...props} />, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
+  const [target, setTarget] = useState();
+  const [emojiIndex, setEmojiIndex] = useState();
+  const [search, setSearch] = useState();
+  const results = useCallback(Object.entries(emojis).filter(([key]) => key.startsWith(search?.toLowerCase())).slice(0,5), [search]);
   const [editorValue, setEditorValue] = useState([
     {
       type: 'paragraph',
       children: [{ text: '' }]
     }
   ]);
+  const onKeyDown = useCallback(
+    event => {
+      if (target) {
+        switch (event.key) {
+          case 'ArrowDown':
+            event.preventDefault();
+            const prevIndex = emojiIndex >= emojis.length - 1 ? 0 : emojiIndex + 1;
+            setEmojiIndex(prevIndex);
+            break;
+          case 'ArrowUp':
+            event.preventDefault();
+            const nextIndex = emojiIndex <= 0 ? emojis.length - 1 : emojiIndex - 1;
+            setEmojiIndex(nextIndex);
+            break;
+          case 'Tab':
+          case 'Enter':
+            event.preventDefault();
+            Transforms.select(editor, target);
+            insertEmoji(editor, results[emojiIndex][0]);
+            setTarget(null);
+            break;
+          case 'Escape':
+            event.preventDefault();
+            setTarget(null);
+            break;
+          default:
+            break;
+        }
+      }
+    },
+    [emojiIndex, target, editor, results]
+  );
 
   const decorate = useCallback(([node, path]) => {
     const ranges = [];
+    if(node.type === 'code-block') {
+      const code = Node.string(node);
+      const tokens = Prism.tokenize(code, Prism.languages.javascript);
+      let start = 0;
+
+      for (const token of tokens) {
+        const length = getTokenLength(token);
+        const end = start + length;
+        if (typeof token !== 'string') {
+          ranges.push({
+            token: token.type,
+            anchor: { path, offset: start },
+            focus: { path, offset: end }
+          });
+        }
+        start = end;
+      }
+    };
     if (Text.isText(node)) {
       const { text } = node;
       if (text) {
@@ -77,54 +143,112 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
 
   return (
     <Slate
-      editor={editor}
       value={editorValue}
-      onChange={(value) => setEditorValue(value)}
+      onChange={(value) => {
+        const { selection } = editor;
+        setEditorValue(value);
+        if (selection && Range.isCollapsed(selection)) {
+          const [start] = Range.edges(selection);
+          const wordBefore = getCurrentWord(editor, start);
+          const emojiMatch = BEFORE_EMOJI_REGEX.exec(wordBefore.text);
+          if(emojiMatch) {
+            setSearch(emojiMatch[1]);
+            setTarget(wordBefore.range);
+            setEmojiIndex(0);
+            return;
+          }
+        }
+        setTarget(null);
+      }}
+      editor={editor}
     >
+      <EmojiDropdown 
+        target={target}
+        editor={editor}
+        results={results}
+        search={search}
+        index={emojiIndex}
+      />
       <InlineToolbar />
       <Toolbar>
-        <BlockButton format="heading-one">
+        <Button 
+          onClick={(event) => {
+            event.preventDefault();
+            toggleBlock(editor, "heading-one");
+          }}
+          classList={classNames('btn-link', {
+            active: isBlockActive(editor, "heading-one")
+          })}
+        >
           <FaHeading />
-        </BlockButton>
-        <BlockButton format="heading-two">
-          <FaHeading />
-          <sub>2</sub>
-        </BlockButton>
-        <BlockButton format="code-block">
+        </Button>
+        <Button 
+          onClick={(event) => {
+            event.preventDefault();
+            toggleBlock(editor, "heading-two");
+          }}
+          classList={classNames('btn-link', {
+            active: isBlockActive(editor, "heading-two")
+          })}
+        >
+          <FaHeading /><sub>2</sub>
+        </Button>
+        <Button 
+          onClick={(event) => {
+            event.preventDefault();
+            toggleBlock(editor, "code-block");
+          }}
+          classList={classNames('btn-link', {
+            active: isBlockActive(editor, "code-block")
+          })}
+        >
           <FaCode />
-        </BlockButton>
-        <BlockButton format="block-quote">
+        </Button>
+        <Button 
+          onClick={(event) => {
+            event.preventDefault();
+            toggleBlock(editor, "block-quote");
+          }}
+          classList={classNames('btn-link', {
+            active: isBlockActive(editor, "block-quote")
+          })}
+        >
           <FaQuoteRight />
-        </BlockButton>
-        <BlockButton format="numbered-list">
+        </Button>
+        <Button 
+          onClick={(event) => {
+            event.preventDefault();
+            toggleBlock(editor, "numbered-list");
+          }}
+          classList={classNames('btn-link', {
+            active: isBlockActive(editor, "numbered-list")
+          })}
+        >
           <FaListOl />
-        </BlockButton>
-        <BlockButton format="bulleted-list">
+        </Button>
+        <Button 
+          onClick={(event) => {
+            event.preventDefault();
+            toggleBlock(editor, "bulleted-list");
+          }}
+          classList={classNames('btn-link', {
+            active: isBlockActive(editor, "bulleted-list")
+          })}
+        >
           <FaListUl />
-        </BlockButton>
-        <ImageButton><FaFileImage /></ImageButton>
+        </Button>
+        <ImageButton handleSubmit={(value) => insertImage(editor, value)}><FaFileImage /></ImageButton>
       </Toolbar>
       <Editable
         placeholder="Well, hello there!"
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
+        renderElement={(props) => <Element {...props} />}
+        renderLeaf={(props) => <Leaf {...props} />}
         autoFocus
         decorate={decorate}
-        onDOMBeforeInput={(event) => {
-          switch (event.inputType) {
-            case 'formatBold':
-              return toggleFormat(editor, 'bold');
-            case 'formatItalic':
-              return toggleFormat(editor, 'italic');
-            case 'formatUnderline':
-              return toggleFormat(editor, 'underline');
-            case 'formatLink':
-              return toggleBlock(editor, 'link');
-            default:
-              return null;
-          }
+        onKeyDown={(event) => {
+          onKeyDown(event);
+          handleKeyDown(event, editor);
         }}
-        onKeyDown={(event) => handleKeyDown(event, editor)}
       />
     </Slate>
   );

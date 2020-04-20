@@ -1,17 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSlate } from 'slate-react';
 import { IoMdClose } from 'react-icons/io';
-import { isImageUrl, insertImage } from 'utils/slateUtils';
+import { isImageUrl } from 'utils/slateUtils';
 import classNames from 'classnames';
 import './Button.scss';
 import './ImageButton.scss';
 
 type Props = {
+  handleSubmit: (value: string) => void,
   children: React$Element<any>
 };
 
-const ImageButton = ({ children }: Props) => {
-  const editor = useSlate();
+const ImageButton = ({ children, handleSubmit }: Props) => {
   const inputRef = useRef(null);
   const [urlValue, setUrlValue] = useState('');
   const [showURLInput, setShowURLInput] = useState(false);
@@ -38,7 +37,7 @@ const ImageButton = ({ children }: Props) => {
             if (key === 'Enter') {
               e.preventDefault();
               if (isImageUrl(urlValue)) {
-                insertImage(editor, urlValue);
+                handleSubmit(urlValue);
                 setShowURLInput(false);
               } else { 
                 setIsValid(false);
@@ -71,4 +70,4 @@ const ImageButton = ({ children }: Props) => {
   );
 };
 
-export default ImageButton;
+export default React.memo(ImageButton);

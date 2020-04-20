@@ -10,16 +10,10 @@ export default function handleKeyDown(event, editor) {
   });
   if (event.key === 'Enter' && event.shiftKey) {
     event.preventDefault();
-    editor.exec({
-      type: 'insert_text',
-      text: '\n'
-    });
+    editor.insertText('\n');
   }
   if (event.key === 'Tab' && isBlockActive(editor, 'code-block')) {
     event.preventDefault();
-    editor.exec({
-      type: 'insert_text',
-      text: '\t'
-    });
+    editor.insertText('\t');
   }
 }

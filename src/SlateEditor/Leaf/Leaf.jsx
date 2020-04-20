@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Leaf as LeafType } from 'slate';
+import isEqual from 'react-fast-compare';
 
 type Props = {
   attributes: Attributes,
@@ -14,6 +15,7 @@ const Leaf = ({ attributes, children, leaf }: Props) => {
   if (leaf.italic) leafChildren = <em>{leafChildren}</em>;
   if (leaf.underlined) leafChildren = <u>{leafChildren}</u>;
   if (leaf.link) leafChildren = <a href={leaf.text}>{leafChildren}</a>;
+  if (leaf.token) leafChildren = <span className={`token ${leaf.token}`}>{leafChildren}</span>;
   if (leaf.hashtag && !leaf.link)
     leafChildren = (
       <a href={leaf.text} className="text-muted">
@@ -23,4 +25,6 @@ const Leaf = ({ attributes, children, leaf }: Props) => {
   return <span {...attributes}>{leafChildren}</span>;
 };
 
-export default Leaf;
+const areEqual = (prevProps, nextProps) => isEqual(prevProps.children, nextProps.children);
+
+export default React.memo(Leaf, areEqual);
