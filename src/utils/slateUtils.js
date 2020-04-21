@@ -61,7 +61,7 @@ export const getCurrentWord = (editor, range, punctuation = '_') => {
   const before = wordBefore && Editor.before(editor, wordBefore);
   const beforeRange = before && Editor.range(editor, before, range);
   const beforeText = beforeRange && Editor.string(editor, beforeRange);
-  return beforeText?.charAt(0) === punctuation ? getCurrentWord(editor, beforeRange): { text: beforeText, range: beforeRange };
+  return beforeText?.charAt(0) === punctuation ? getCurrentWord(editor, beforeRange) : { text: beforeText, range: beforeRange };
 }
 
 export const withEmojis = (editor) => {
@@ -74,7 +74,7 @@ export const withEmojis = (editor) => {
       const [start] = Range.edges(selection);
       const wordBefore = getCurrentWord(editor, start);
       const emojiMatch = LAST_EMOJI_REGEX.exec(wordBefore.text);
-      if(emojiMatch) insertEmoji(editor, emojiMatch[1]);
+      if (emojiMatch) insertEmoji(editor, emojiMatch[1]);
     }
     insertText(text);
   }
@@ -87,10 +87,11 @@ export const getTokenLength = (token) => {
   else return token.content.reduce((l, t) => l + getTokenLength(t), 0);
 };
 
-export const insertEmoji = (editor, emojiKey) => {
-  if(emojis[emojiKey]){
+export const insertEmoji = (editor, emojiKey, selection) => {
+  if (emojis[emojiKey]) {
     const { emoji } = emojis[emojiKey];
-    const node = { type: 'emoji', emoji , children: [{ text: emojiKey }] };
+    const node = { type: 'emoji', emoji, children: [{ text: emojiKey }] };
+    Transforms.select(editor, selection);
     Transforms.insertNodes(editor, node);
     Transforms.move(editor);
   }
@@ -141,7 +142,7 @@ export const withAnchors = (editor) => {
   const { insertData, insertText, isInline } = editor;
 
   editor.isInline = (element) => element.type === 'anchor' ? true : isInline(element);
-  
+
   editor.insertText = (text) => {
     if (text && isUrl(text)) wrapLink(editor, text);
     else insertText(text);
@@ -164,7 +165,7 @@ export const withImages = (editor) => {
   editor.insertData = (data) => {
     const text = data.getData('text/plain');
     const { files } = data;
-    
+
     if (text && isUrl(text)) wrapLink(editor, text);
 
     if (files && files.length > 0)

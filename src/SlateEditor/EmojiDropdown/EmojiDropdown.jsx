@@ -5,7 +5,7 @@ import { insertEmoji } from 'utils/slateUtils';
 import classNames from 'classnames';
 import './EmojiDropdown.scss';
 
-export default ({ 
+export default ({
   target,
   editor,
   search,
@@ -35,7 +35,7 @@ export default ({
           className={classNames('emoji', { active: i === index })}
           onClick={(e) => {
             e.preventDefault();
-            insertEmoji(editor, key);
+            insertEmoji(editor, key, target);
           }}
         >
           {value.emoji} {value.description}

@@ -11,7 +11,7 @@
     background: transparent;
     &.active, &:hover {
       cursor: pointer;
-      background: #B4D5FF;
+      background: rgba(0,0,0,.1);
     }
   }
 }

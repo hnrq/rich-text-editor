@@ -1,17 +1,17 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { 
-  createEditor, 
-  Text, 
+import {
+  createEditor,
+  Text,
   Transforms,
   Range,
   Node
-  } from 'slate';
+} from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
-import { 
+import {
   isBlockActive,
   insertImage,
   insertEmoji,
-  toggleBlock, 
+  toggleBlock,
   withImages,
   withAnchors,
   withEmojis,
@@ -50,7 +50,7 @@ type Props = {
 };
 
 const linkify = linkifyIt();
-Transforms.deselect = () => {};
+Transforms.deselect = () => { };
 
 const SlateEditor = ({ readOnly, classList }: Props) => {
   const editor = useMemo(
@@ -59,7 +59,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
   const [target, setTarget] = useState();
   const [emojiIndex, setEmojiIndex] = useState();
   const [search, setSearch] = useState();
-  const results = useCallback(Object.entries(emojis).filter(([key]) => key.startsWith(search?.toLowerCase())).slice(0,5), [search]);
+  const results = useCallback(Object.entries(emojis).filter(([key]) => key.includes(search?.toLowerCase())).slice(0, 5), [search]);
   const [editorValue, setEditorValue] = useState([
     {
       type: 'paragraph',
@@ -101,7 +101,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
 
   const decorate = useCallback(([node, path]) => {
     const ranges = [];
-    if(node.type === 'code-block') {
+    if (node.type === 'code-block') {
       const code = Node.string(node);
       const tokens = Prism.tokenize(code, Prism.languages.javascript);
       let start = 0;
@@ -123,12 +123,12 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
       const { text } = node;
       if (text) {
         (linkify.match(text) || []).forEach(({ index, lastIndex }) => {
-            ranges.push({
-              anchor: { path, offset: lastIndex },
-              focus: { path, offset: index },
-              link: true
-            });
+          ranges.push({
+            anchor: { path, offset: lastIndex },
+            focus: { path, offset: index },
+            link: true
           });
+        });
         execAll(text, HASHTAG_REGEX).forEach(({ index, lastIndex }) => {
           ranges.push({
             anchor: { path, offset: lastIndex },
@@ -136,7 +136,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
             hashtag: true
           });
         });
-      }    
+      }
     }
     return ranges;
   }, []);
@@ -151,7 +151,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
           const [start] = Range.edges(selection);
           const wordBefore = getCurrentWord(editor, start);
           const emojiMatch = BEFORE_EMOJI_REGEX.exec(wordBefore.text);
-          if(emojiMatch) {
+          if (emojiMatch) {
             setSearch(emojiMatch[1]);
             setTarget(wordBefore.range);
             setEmojiIndex(0);
@@ -162,7 +162,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
       }}
       editor={editor}
     >
-      <EmojiDropdown 
+      <EmojiDropdown
         target={target}
         editor={editor}
         results={results}
@@ -171,7 +171,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
       />
       <InlineToolbar />
       <Toolbar>
-        <Button 
+        <Button
           onClick={(event) => {
             event.preventDefault();
             toggleBlock(editor, "heading-one");
@@ -182,7 +182,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
         >
           <FaHeading />
         </Button>
-        <Button 
+        <Button
           onClick={(event) => {
             event.preventDefault();
             toggleBlock(editor, "heading-two");
@@ -193,7 +193,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
         >
           <FaHeading /><sub>2</sub>
         </Button>
-        <Button 
+        <Button
           onClick={(event) => {
             event.preventDefault();
             toggleBlock(editor, "code-block");
@@ -204,7 +204,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
         >
           <FaCode />
         </Button>
-        <Button 
+        <Button
           onClick={(event) => {
             event.preventDefault();
             toggleBlock(editor, "block-quote");
@@ -215,7 +215,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
         >
           <FaQuoteRight />
         </Button>
-        <Button 
+        <Button
           onClick={(event) => {
             event.preventDefault();
             toggleBlock(editor, "numbered-list");
@@ -226,7 +226,7 @@ const SlateEditor = ({ readOnly, classList }: Props) => {
         >
           <FaListOl />
         </Button>
-        <Button 
+        <Button
           onClick={(event) => {
             event.preventDefault();
             toggleBlock(editor, "bulleted-list");
