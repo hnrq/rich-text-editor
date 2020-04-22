@@ -46,7 +46,7 @@ const App = () => {
               </>
             </Route>
             <Route exact path="/">
-              <Redirect to="/draft" />
+              <Redirect to="/slate" />
             </Route>
           </Switch>
         </div>
