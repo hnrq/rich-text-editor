@@ -4,6 +4,9 @@
   "homepage": "https://murmuring-everglades-31838.herokuapp.com/",
   "proxy": "http://localhost:4001/",
   "private": true,
+  "engines": {
+    "node": "13.x.x"
+  },
   "dependencies": {
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
