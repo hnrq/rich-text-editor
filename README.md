@@ -4,7 +4,7 @@ This project is not actually a RTE, but a bunch of RTE Frameworks tests, like Dr
 ### THIS IS NOT A COMPONENT TO USE ON ANOTHER PROJECT, (NOT YET)
 
 ## Demo
-A live demo is available [here](https://alberoneramos.github.io/rich-text-editor)
+A live demo is available [here](https://slate-editor.herokuapp.com/)
 
 ## Motivation
 Even though there are a lot of React WYSIWYG editors, most of those just didn't fit the requirements. So I decided to create two editors from scratch: **SlateEditor** (using SlateJS) and **TextEditor** (using DraftJS)
