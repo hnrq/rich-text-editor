@@ -25,11 +25,16 @@ const ImageButton = ({ children, handleSubmit }: Props) => {
 
   return (
     <div className="btn-image">
-      <div className={classNames('image-input-section align-items-center flex-row', { 'd-flex': showURLInput, 'd-none': !showURLInput})}>
+      <div className={classNames('image-input-section align-items-center flex-row', { 
+        'd-flex': showURLInput, 
+        'd-none': !showURLInput 
+      })}>
         <input
           ref={inputRef}
           type="text"
-          className={classNames("form-control", { 'invalid': !isValid })}
+          className={classNames("form-control", { 
+            invalid: !isValid 
+          })}
           value={urlValue}
           placeholder="Ex.: imgur.com/abc.jpg"
           onKeyDown={(e) => {
@@ -45,7 +50,6 @@ const ImageButton = ({ children, handleSubmit }: Props) => {
             }
           }}
           onChange={(e) => setUrlValue(e.target.value)}
-          onBlur={(e) => setShowURLInput(false)}
         />
         <button 
           onMouseDown={(e) => {

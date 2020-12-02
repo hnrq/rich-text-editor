@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
+
 import './App.css';
 import 'bootstrap/scss/bootstrap.scss';
-import { HashRouter, Switch, Route, Redirect, NavLink } from 'react-router-dom';
+import { 
+  HashRouter, 
+  Switch, 
+  Route, 
+  Redirect, 
+  NavLink 
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { SwitchButton } from 'SwitchButton';
 import { Editor as SlateEditor } from 'SlateEditor';
@@ -34,7 +41,7 @@ const App = () => {
             <Route path="/slate" component={SlateEditor} />
             <Route path="/draft">
               <>
-                <div className='d-flex mb-3 align-items-center'>
+                <div className="d-flex mb-3 align-items-center">
                   <SwitchButton 
                     onToggle={() => setReadOnly(true)}
                     onUntoggle={() => setReadOnly(false)}
@@ -53,6 +60,6 @@ const App = () => {
       </HashRouter>
     </Provider>
   );
-}
+};
 
 export default App;
