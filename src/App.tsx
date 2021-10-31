@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC } from 'react';
+import styled, { ThemeProvider } from 'styled-components';
+import theme from 'theme';
+import Editor from 'containers/Editor';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const AppContainer = styled.div`
+  height: 100vh;
+  background: ${props => props.theme.colors.background};
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const App: FC = () => (
+  <ThemeProvider theme={theme}>
+    <AppContainer>
+      <Editor />
+    </AppContainer>
+  </ThemeProvider>
+);
 
 export default App;

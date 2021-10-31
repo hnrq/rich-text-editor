@@ -6,7 +6,7 @@ const setupInitialValue = (
   text: string,
   format?: keyof LeafProps['leaf'],
 ): Node => {
-  let node: Node = {
+  const node: Node = {
     type: 'paragraph',
     children: [{text}],
   }
