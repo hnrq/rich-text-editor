@@ -3,6 +3,30 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {
+  faUnderline,
+  faBold,
+  faItalic,
+  faCode,
+  faListOl,
+  faListUl,
+  faHeading,
+  faQuoteLeft,
+  fas,
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(
+  fas,
+  faUnderline,
+  faBold,
+  faItalic,
+  faCode,
+  faListOl,
+  faListUl,
+  faHeading,
+  faQuoteLeft,
+);
 
 ReactDOM.render(
   <React.StrictMode>

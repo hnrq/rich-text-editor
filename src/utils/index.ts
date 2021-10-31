@@ -1,6 +1,7 @@
-import {Editor, Transforms, Element} from 'slate';
+import {Editor, Transforms, Element, Range} from 'slate';
 import {MarkEnum, BlockEnum, ListEnum} from 'common/types';
 import {EditorType} from 'common/types';
+import {ReactEditor} from 'slate-react';
 
 export const LIST_TYPES: Array<ListEnum> = ['list-item', 'numbered-list'];
 
@@ -17,6 +18,16 @@ export const toggleMark = (editor: EditorType, format: MarkEnum): void => {
   } else {
     Editor.addMark(editor, format, true);
   }
+};
+
+export const isSelected = (editor: Editor): boolean => {
+  const {selection} = editor;
+  return Boolean(
+    selection &&
+    ReactEditor.isFocused(editor) &&
+    !Range.isCollapsed(selection) &&
+    Editor.string(editor, selection) !== ''
+  );
 };
 
 export const isBlockActive = (

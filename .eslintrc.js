@@ -20,6 +20,7 @@ module.exports = {
   plugins: [
     'react',
     '@typescript-eslint',
+    'react-hooks',
     'testing-library',
     'jest-dom',
     'prettier',

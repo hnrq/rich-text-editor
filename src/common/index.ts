@@ -1,10 +1,9 @@
 export const MARKS = ['bold', 'code', 'italic', 'underline'] as const;
-export const LISTS = ['list-item', 'numbered-list'] as const;
+export const LISTS = ['list-item', 'numbered-list', 'bulleted-list'] as const;
 export const BLOCKS = [
-  ...LISTS,
-  'block-quote',
-  'bulleted-list',
   'heading-one',
   'heading-two',
+  'block-quote',
   'paragraph',
+  ...LISTS,
 ] as const;

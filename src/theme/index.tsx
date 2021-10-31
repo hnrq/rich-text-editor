@@ -5,6 +5,7 @@ const theme = {
     foreground: '#ffffff',
     primary: '#1f1f1f',
     secondary: '#a8a8a8',
+    inactive: '#aaaaaa',
   },
   mediaQuery: {
     phone: '@media screen and (max-width: 600px)',

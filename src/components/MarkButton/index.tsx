@@ -3,17 +3,20 @@ import {useSlate} from 'slate-react';
 import styled from 'styled-components';
 import {MarkEnum} from 'common/types';
 import {toggleMark, isMarkActive} from 'utils';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 interface MarkButtonProps {
   format: MarkEnum;
+  icon?: 'underline' | 'bold' | 'italic' | 'code';
 }
 
 const Button = styled.button<{active: boolean}>`
   color: ${({active, theme}) =>
-    active ? theme.colors.foreground : theme.colors.background};
+    active ? theme.colors.foreground : theme.colors.inactive};
+  background: #000;
   border: none;
   margin: 0;
-  padding: 0.25em 0.5em;
+  padding: 0.5rem;
   outline: none;
   cursor: pointer;
   &:hover {
@@ -21,7 +24,7 @@ const Button = styled.button<{active: boolean}>`
   }
 `;
 
-const MarkButton: FC<MarkButtonProps> = ({format, children}) => {
+const MarkButton: FC<MarkButtonProps> = ({format, children, icon}) => {
   const editor = useSlate();
 
   return (
@@ -34,6 +37,7 @@ const MarkButton: FC<MarkButtonProps> = ({format, children}) => {
       active={isMarkActive(editor, format)}
     >
       {children}
+      {icon && <FontAwesomeIcon icon={icon} data-testid="mark-icon" />}
     </Button>
   );
 };
