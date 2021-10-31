@@ -19,6 +19,7 @@ import HoveringToolbar from '.';
 import {ThemeProvider} from 'styled-components';
 
 jest.mock('slate-react', () => ({
+  // eslint-disable @typescript-eslint/no-explicit-any
   ...jest.requireActual<any>('slate-react'),
   useSlate: jest.fn(),
 }));
