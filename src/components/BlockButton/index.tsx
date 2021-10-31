@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { useSlate } from "slate-react";
+import {FC} from 'react';
+import {useSlate} from 'slate-react';
 import styled from 'styled-components';
 import {BlockEnum} from 'common/types';
 import {toggleBlock, isBlockActive} from 'utils';
@@ -9,7 +9,8 @@ interface BlockButtonProps {
 }
 
 const Button = styled.button<{active: boolean}>`
-  color: ${({active, theme}) => active ? theme.colors.primary : theme.colors.background};
+  color: ${({active, theme}) =>
+    active ? theme.colors.primary : theme.colors.background};
   border: none;
   font: inherit;
   margin: 0;
@@ -27,7 +28,7 @@ const BlockButton: FC<BlockButtonProps> = ({format, children}) => {
   return (
     <Button
       data-testid="block-button"
-      onMouseDown={(e) => {
+      onMouseDown={e => {
         e.preventDefault();
         toggleBlock(editor, format);
       }}
@@ -36,6 +37,6 @@ const BlockButton: FC<BlockButtonProps> = ({format, children}) => {
       {children}
     </Button>
   );
-}
+};
 
 export default BlockButton;

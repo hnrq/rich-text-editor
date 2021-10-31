@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import {FC} from 'react';
+import styled, {ThemeProvider} from 'styled-components';
 import theme from 'theme';
 import Editor from 'containers/Editor';
 

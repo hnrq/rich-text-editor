@@ -5,7 +5,7 @@ import {Slate, Editable, withReact} from 'slate-react';
 import styled from 'styled-components';
 
 import Leaf from 'components/Leaf';
-import { BlockEnum, EditorType, MarkEnum } from 'common/types';
+import {BlockEnum, EditorType, MarkEnum} from 'common/types';
 
 export type CustomElement = {type: BlockEnum; children: CustomText[]};
 export type CustomText = {
@@ -44,9 +44,7 @@ const Editor: FC = () => {
   return (
     <EditorContainer>
       <Slate value={value} onChange={setValue} editor={editor}>
-        <Editable
-          renderLeaf={renderLeaf}
-        />
+        <Editable renderLeaf={renderLeaf} />
       </Slate>
     </EditorContainer>
   );

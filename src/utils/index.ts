@@ -5,7 +5,7 @@ import {EditorType} from 'common/types';
 export const LIST_TYPES: Array<ListEnum> = ['list-item', 'numbered-list'];
 
 export const isMarkActive = (editor: EditorType, format: MarkEnum): boolean => {
-  const marks = (Editor.marks(editor) as unknown) as {[key: string]: boolean};
+  const marks = Editor.marks(editor) as unknown as {[key: string]: boolean};
   return marks ? marks[format] === true : false;
 };
 
@@ -19,18 +19,21 @@ export const toggleMark = (editor: EditorType, format: MarkEnum): void => {
   }
 };
 
-export const isBlockActive = (editor: EditorType, format: BlockEnum): boolean => {
-  const { selection } = editor
-  if (!selection) return false
+export const isBlockActive = (
+  editor: EditorType,
+  format: BlockEnum,
+): boolean => {
+  const {selection} = editor;
+  if (!selection) return false;
 
   const [match] = Editor.nodes(editor, {
     at: Editor.unhangRange(editor, selection),
     match: n =>
       !Editor.isEditor(n) && Element.isElement(n) && n.type === format,
-  })
+  });
 
-  return !!match
-}
+  return !!match;
+};
 
 export const toggleBlock = (editor: EditorType, format: BlockEnum): void => {
   const isActive = isBlockActive(editor, format);
@@ -44,7 +47,7 @@ export const toggleBlock = (editor: EditorType, format: BlockEnum): void => {
     split: true,
   });
   const newProperties: Partial<Element> = {
-    type: (isActive ? 'paragraph' : isList ? 'list-item' : format),
+    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
   };
   Transforms.setNodes(editor, newProperties);
 

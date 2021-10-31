@@ -42,7 +42,7 @@ describe('<MarkButton />', () => {
     (isMarkActive as jest.Mock).mockReturnValue(true);
     const children = faker.random.word();
     const {getByText} = renderMarkButton(children);
-    
+
     expect(getByText(children)).toHaveStyle({color: theme.colors.foreground});
   });
 

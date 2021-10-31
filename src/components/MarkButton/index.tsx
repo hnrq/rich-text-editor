@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { useSlate } from "slate-react";
+import {FC} from 'react';
+import {useSlate} from 'slate-react';
 import styled from 'styled-components';
 import {MarkEnum} from 'common/types';
 import {toggleMark, isMarkActive} from 'utils';
@@ -9,7 +9,8 @@ interface MarkButtonProps {
 }
 
 const Button = styled.button<{active: boolean}>`
-  color: ${({active, theme}) => active ? theme.colors.foreground : theme.colors.background};
+  color: ${({active, theme}) =>
+    active ? theme.colors.foreground : theme.colors.background};
   border: none;
   margin: 0;
   padding: 0.25em 0.5em;
@@ -26,7 +27,7 @@ const MarkButton: FC<MarkButtonProps> = ({format, children}) => {
   return (
     <Button
       data-testid="mark-button"
-      onMouseDown={(e) => {
+      onMouseDown={e => {
         e.preventDefault();
         toggleMark(editor, format);
       }}
@@ -35,6 +36,6 @@ const MarkButton: FC<MarkButtonProps> = ({format, children}) => {
       {children}
     </Button>
   );
-}
+};
 
 export default MarkButton;

@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { MarkEnum } from 'common/types';
+import {FC} from 'react';
+import {MarkEnum} from 'common/types';
 
 export interface LeafProps {
   attributes?: {[key: string]: unknown};
