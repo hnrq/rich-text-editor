@@ -1,12 +1,10 @@
-import {FC} from 'react';
+import { FC } from 'react';
+import { MarkEnum } from 'common/types';
 
 export interface LeafProps {
   attributes?: {[key: string]: unknown};
   leaf: {
-    bold?: boolean;
-    code?: boolean;
-    italic?: boolean;
-    underline?: boolean;
+    [key in MarkEnum]?: true;
   };
 }
 

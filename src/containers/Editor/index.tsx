@@ -1,15 +1,16 @@
 import {FC, useMemo, useState, useCallback} from 'react';
-import {BaseEditor, createEditor, Descendant} from 'slate';
-import {HistoryEditor, withHistory} from 'slate-history';
-import {Slate, Editable, withReact, ReactEditor} from 'slate-react';
+import {createEditor, Descendant} from 'slate';
+import {withHistory} from 'slate-history';
+import {Slate, Editable, withReact} from 'slate-react';
 import styled from 'styled-components';
 
 import Leaf from 'components/Leaf';
+import { BlockEnum, EditorType, MarkEnum } from 'common/types';
 
-type CustomElement = {type: 'paragraph'; children: CustomText[]};
-type CustomText = {text: string; bold?: true};
-
-export type EditorType = BaseEditor & ReactEditor & HistoryEditor;
+export type CustomElement = {type: BlockEnum; children: CustomText[]};
+export type CustomText = {
+  [key in MarkEnum]?: true;
+} & {text: string};
 
 declare module 'slate' {
   interface CustomTypes {
@@ -45,7 +46,6 @@ const Editor: FC = () => {
       <Slate value={value} onChange={setValue} editor={editor}>
         <Editable
           renderLeaf={renderLeaf}
-          onSelect={() => console.log(editor)}
         />
       </Slate>
     </EditorContainer>

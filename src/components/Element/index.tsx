@@ -1,9 +1,10 @@
-import {FC} from 'react';
+import { FC } from 'react';
+import { BlockEnum } from 'common/types';
 
 interface ElementProps {
   attributes?: {[key: string]: string};
   element: {
-    type?: string;
+    type?: BlockEnum;
   }
 }
 

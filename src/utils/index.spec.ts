@@ -1,27 +1,28 @@
 import {createEditor, Editor, Node, Transforms} from 'slate';
-import * as utils from '.';
-import {LeafProps} from '../components/Leaf';
+import {BlockEnum, MarkEnum} from 'common/types';
+import {CustomElement} from 'containers/Editor';
+import faker from 'faker';
 
-const setupInitialValue = (
-  text: string,
-  format?: keyof LeafProps['leaf'],
-): Node => {
+import * as utils from '.';
+import {BLOCKS, LISTS, MARKS} from 'common';
+
+const setupInitialValue = (text: string, mark?: MarkEnum): Node => {
   const node: Node = {
     type: 'paragraph',
     children: [{text}],
-  }
+  };
 
-  if (format) node.children[0][format] = true;
+  if (mark) node.children[0][mark] = true;
   return node;
 };
 
 describe('Util', () => {
-  describe('isFormatActive', () => {
-    it('Returns true if the format is active', () => {
+  describe('isMarkActive', () => {
+    it('Returns true if the mark is active', () => {
       const editor = createEditor();
-      const initialText = 'Hello, World';
-      const format = 'bold';
-      editor.insertNode(setupInitialValue(initialText, format));
+      const text = faker.random.words(3);
+      const mark = faker.random.arrayElement(MARKS);
+      editor.insertNode(setupInitialValue(text, mark));
       Transforms.select(editor, {
         anchor: {
           path: [0, 0],
@@ -29,18 +30,18 @@ describe('Util', () => {
         },
         focus: {
           path: [0, 0],
-          offset: initialText.length,
+          offset: text.length,
         },
       });
 
-      expect(utils.isFormatActive(editor, format)).toBe(true);
+      expect(utils.isMarkActive(editor, mark)).toBe(true);
     });
 
-    it('Returns false if the format is inactive', () => {
+    it('Returns false if the mark is inactive', () => {
       const editor = createEditor();
-      const initialText = 'Hello, World';
-      const format = 'bold';
-      editor.insertNode(setupInitialValue(initialText, format));
+      const text = faker.random.words(3);
+      const marks = faker.random.arrayElements(MARKS, 2);
+      editor.insertNode(setupInitialValue(text, marks[0]));
       Transforms.select(editor, {
         anchor: {
           path: [0, 0],
@@ -48,20 +49,20 @@ describe('Util', () => {
         },
         focus: {
           path: [0, 0],
-          offset: initialText.length,
+          offset: text.length,
         },
       });
 
-      expect(utils.isFormatActive(editor, 'italic')).toBe(false);
+      expect(utils.isMarkActive(editor, marks[1])).toBe(false);
     });
   });
 
-  describe('toggleFormat', () => {
-    it("Removes an inline format if it's present", () => {
+  describe('toggleMark', () => {
+    it('Removes the mark if present', () => {
       const editor = createEditor();
-      const initialText = 'Hello, World';
-      const format = 'bold';
-      editor.insertNode(setupInitialValue(initialText));
+      const text = faker.random.words(3);
+      const mark = faker.random.arrayElement(MARKS);
+      editor.insertNode(setupInitialValue(text));
       Transforms.select(editor, {
         anchor: {
           path: [0, 0],
@@ -69,24 +70,21 @@ describe('Util', () => {
         },
         focus: {
           path: [0, 0],
-          offset: initialText.length,
+          offset: text.length,
         },
       });
-      utils.toggleFormat(editor, format);
-
-      const [match] = Editor.nodes(editor, {
-        match: n => n[format] === true,
-        mode: 'all',
-      });
-
-      expect(match[0]).toEqual({[format]: true, text: initialText});
+      let marks = Editor.marks(editor);
+      expect(marks?.[mark]).toBe(undefined);
+      utils.toggleMark(editor, mark);
+      marks = Editor.marks(editor);
+      expect(marks?.[mark]).toBe(true);
     });
 
-    it("Adds an inline format if it's not present", () => {
+    it('Adds the mark if not present', () => {
       const editor = createEditor();
-      const initialText = 'Hello, World';
-      const format = 'bold';
-      editor.insertNode(setupInitialValue(initialText, format));
+      const text = faker.random.words(3);
+      const mark = faker.random.arrayElement(MARKS);
+      editor.insertNode(setupInitialValue(text, mark));
       Transforms.select(editor, {
         anchor: {
           path: [0, 0],
@@ -94,17 +92,66 @@ describe('Util', () => {
         },
         focus: {
           path: [0, 0],
-          offset: initialText.length,
+          offset: text.length,
         },
       });
-      utils.toggleFormat(editor, format);
+      let marks = Editor.marks(editor);
+      expect(marks?.[mark]).toBe(true);
+      utils.toggleMark(editor, mark);
+      marks = Editor.marks(editor);
+      expect(marks?.[mark]).toBe(undefined);
+    });
+  });
 
-      const [match] = Editor.nodes(editor, {
-        match: n => n[format] === true,
-        mode: 'all',
-      });
+  describe('isBlockActive', () => {
+    it('returns true if current node has the given block style', () => {
+      const editor = createEditor();
+      const text = faker.random.words(3);
+      const type: BlockEnum = faker.random.arrayElement(BLOCKS);
+      editor.insertNode({type, children: [{text}]});
 
-      expect(match).toBeUndefined();
+      expect(utils.isBlockActive(editor, type)).toBe(true);
+    });
+
+    it('returns false if current node does not have the given block style', () => {
+      const editor = createEditor();
+      const text = faker.random.words(3);
+      const type: BlockEnum = faker.random.arrayElement(BLOCKS);
+      editor.insertNode({type: 'paragraph', children: [{text}]});
+
+      expect(utils.isBlockActive(editor, type)).toBe(false);
+    });
+  });
+
+  describe('toggleBlock', () => {
+    it('Removes block styling if present', () => {
+      const editor = createEditor();
+      const text = faker.random.words(3);
+      const type: BlockEnum = faker.random.arrayElement(BLOCKS);
+      editor.insertNode({type, children: [{text}]});
+      expect((editor.children[0] as CustomElement).type).toBe(type);
+      utils.toggleBlock(editor, type);
+      expect((editor.children[0] as CustomElement).type).toBe('paragraph');
+    });
+
+    it('Adds block styling if present', () => {
+      const editor = createEditor();
+      const text = faker.random.words(3);
+      const type: BlockEnum = faker.random.arrayElement(BLOCKS);
+      editor.insertNode({type: 'paragraph', children: [{text}]});
+      expect((editor.children[0] as CustomElement).type).toBe('paragraph');
+      utils.toggleBlock(editor, type);
+      expect((editor.children[0] as CustomElement).type).toBe(type);
+    });
+
+    it('Adds list-item styling if a list style is provided', () => {
+      const editor = createEditor();
+      const text = faker.random.words(3);
+      const type: BlockEnum = faker.random.arrayElement(LISTS);
+      editor.insertNode({type: 'paragraph', children: [{text}]});
+      expect((editor.children[0] as CustomElement).type).toBe('paragraph');
+      utils.toggleBlock(editor, type);
+      expect((editor.children[0] as CustomElement).type).toBe(type);
     });
   });
 });
